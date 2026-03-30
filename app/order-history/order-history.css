@@ -1,0 +1,257 @@
+.orderHistoryPage {
+  min-height: 100vh;
+  background: #f6f8fc;
+}
+
+.orderContainer {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 48px 0 70px;
+}
+
+.pageHeader {
+  margin-bottom: 28px;
+}
+
+.pageTitle {
+  margin: 0 0 8px;
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #1c1f27;
+  letter-spacing: -0.02em;
+}
+
+.pageSubtitle {
+  margin: 0;
+  font-size: 18px;
+  color: #8a94a6;
+}
+
+.loadingText,
+.errorText,
+.emptyText {
+  font-size: 16px;
+  margin-top: 18px;
+}
+
+.errorText {
+  color: #dc2626;
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.orderCard {
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.04);
+}
+
+.orderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.orderTop h3 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #1d2433;
+}
+
+.orderTop p {
+  margin: 0;
+  font-size: 15px;
+  color: #8a94a6;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.statusBadge.completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.statusBadge.processing {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.statusBadge.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.statusBadge.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.statusBadge.on-hold {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.orderInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.orderInfo p {
+  width: calc(50% - 10px);
+}
+
+.orderInfo p {
+  margin: 0;
+  font-size: 16px;
+  color: #293041;
+}
+
+.orderInfo strong {
+  font-weight: 600;
+  color: #1d2433;
+}
+
+.orderProducts {
+  border-top: 1px solid #edf1f6;
+  padding-top: 20px;
+}
+
+.orderProducts h4 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d2433;
+}
+
+.productList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.productRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: #2b3345;
+  border: 1px solid #eef2f7;
+}
+
+.productRow span:last-child {
+  font-weight: 700;
+  color: #1d2433;
+  white-space: nowrap;
+}
+
+.orderActions {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #edf1f6;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancelOrderBtn {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #ef4444;
+  background: #ffffff;
+  color: #ef4444;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancelOrderBtn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.cancelOrderBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 767px) {
+  .orderContainer {
+    width: calc(100% - 24px);
+    padding: 28px 0 50px;
+  }
+
+  .pageTitle {
+    font-size: 32px;
+  }
+
+  .pageSubtitle {
+    font-size: 15px;
+  }
+
+    .orderInfo p {
+    width: 100%;
+  }
+
+  .orderCard {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .orderTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orderTop h3 {
+    font-size: 22px;
+  }
+
+  .orderInfo {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .productRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orderActions {
+    justify-content: stretch;
+  }
+
+  .cancelOrderBtn {
+    width: 100%;
+  }
+}

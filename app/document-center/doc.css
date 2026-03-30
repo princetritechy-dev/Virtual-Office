@@ -1,0 +1,173 @@
+.doc-container {
+  width: 100%;
+  min-height: calc(100vh - 407px);
+  padding: 10px 0 40px;
+  box-sizing: border-box;
+}
+
+.doc-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.doc-status-row h2 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.doc-status-badge {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-not_uploaded {
+  background: #eef2f7;
+  color: #344054;
+}
+
+.status-pending {
+  background: #fff4db;
+  color: #b54708;
+}
+
+.status-verified {
+  background: #e8f7ec;
+  color: #067647;
+}
+
+.status-failed {
+  background: #fef3f2;
+  color: #d92d20;
+}
+
+.doc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.doc-flex {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.doc-box {
+  flex: 1 1 420px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.doc-box p {
+  margin: 0;
+  font-weight: 600;
+  color: #1d2433;
+}
+
+.doc-box input[type="file"] {
+  width: 100%;
+}
+
+.doc-file-name {
+  font-size: 14px;
+  color: #555;
+  word-break: break-word;
+}
+
+.doc-form button {
+  width: fit-content;
+  min-width: 180px;
+  padding: 12px 20px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.doc-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.doc-message {
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.doc-loading {
+  padding: 40px;
+  text-align: center;
+}
+
+.uploaded-doc-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.doc-link {
+  color: #0f4c81;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
+.doc-reupload-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #e5e7eb;
+  color: #111827;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.doc-reupload-btn:hover {
+  background: #d1d5db;
+}
+
+@media (max-width: 768px) {
+  .doc-container {
+    min-height: auto;
+    padding-bottom: 30px;
+  }
+
+  .doc-status-row h2 {
+    font-size: 24px;
+  }
+
+  .doc-flex {
+    flex-direction: column;
+  }
+
+  .doc-box {
+    flex: 1 1 100%;
+  }
+
+  .doc-form button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,167 @@
+.portalPageWrap {
+  padding: 40px 0 60px;
+  background: #f7f9fc;
+  /* min-height: calc(100vh - 80px); */
+}
+
+.portalPageInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+.headerAvatarImage {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.portalSidebarCard {
+  background: #ffffff;
+  border: 1px solid #e7ecf3;
+  border-radius: 18px;
+  padding: 22px;
+  height: 500px;
+  position: sticky;
+  top: 110px;
+}
+
+.portalSidebarUser {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.portalSidebarAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.portalSidebarUserText h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.portalSidebarUserText p {
+  margin: 0;
+  font-size: 13px;
+  color: #98a2b3;
+  word-break: break-word;
+}
+
+.portalSidebarMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.portalSidebarLink,
+.portalSidebarLogout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #8a94a6;
+  background: transparent;
+  border: 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.portalSidebarLink:hover,
+.portalSidebarLogout:hover {
+  background: #f4f7fb;
+}
+
+.portalSidebarLink.active {
+  background: #eaf2ff;
+  color: #3b82f6;
+}
+
+.portalSidebarIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.portalSidebarDivider {
+  height: 1px;
+  background: #e8edf5;
+  margin: 22px 0;
+}
+
+.portalSidebarLogout {
+  color: #ef4444;
+}
+
+.portalMainArea {
+  flex: 1; /* Take remaining space */
+  min-width: 0;
+}
+
+.portalPageHeader {
+  margin-bottom: 26px;
+}
+
+.portalPageHeader h1 {
+  margin: 0 0 8px;
+  font-size: 54px;
+  line-height: 1.05;
+  font-weight: 800;
+  color: #111827;
+}
+
+.portalPageHeader p {
+  margin: 0;
+  font-size: 16px;
+  color: #8a94a6;
+}
+
+.portalContentCardless {
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .portalSidebarCard {
+  position: static;
+  
+}
+
+  .portalPageInner {
+    flex-direction: column;
+  }
+
+  .portalPageHeader h1 {
+    font-size: 38px;
+  }
+
+  .portalSidebarCard {
+    flex: 0 0 100%;
+  }
+}

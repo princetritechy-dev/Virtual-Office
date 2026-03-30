@@ -1,0 +1,88 @@
+.orderSuccessPage {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+}
+
+.orderSuccessContainer {
+  max-width: 900px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(16, 24, 40, 0.08);
+}
+
+h1 {
+  color: #111827;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+p {
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.orderSummary {
+  background: #f3f4f6;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.orderSummary h2 {
+  font-size: 24px;
+  color: #2e3c5c;
+}
+
+.orderItems {
+  margin-top: 15px;
+}
+
+.orderItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.shippingInfo,
+.billingInfo {
+  margin-top: 30px;
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+h2 {
+  font-size: 20px;
+  color: #2e3c5c;
+  margin-bottom: 10px;
+}
+
+.nextSteps {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.viewOrdersButton,
+.continueShoppingButton {
+  padding: 12px 20px;
+  font-size: 16px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  background-color: #00a699;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.viewOrdersButton:hover,
+.continueShoppingButton:hover {
+  background-color: #018d7e;
+}
