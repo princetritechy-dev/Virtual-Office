@@ -1,5 +1,8 @@
+// app/api/upload-documents/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { v4 as uuidv4 } from 'uuid'; // for unique file names
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+import path from 'path';
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,26 +38,41 @@ export async function POST(req: NextRequest) {
 
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    // Save file temporarily as base64
+    // Temporary directory for storing the files
+    const tmpDir = '/tmp'; // Vercel's writable file system for serverless functions
+
+    // Create the directory inside /tmp if it doesn't exist
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+
+    // Function to save the file to /tmp
     const saveFile = async (file: File, label: string) => {
       const bytes = await file.arrayBuffer();
-      const base64String = Buffer.from(bytes).toString('base64');
+      const buffer = Buffer.from(bytes);
       const fileName = `${safeEmail}_${label}_${uuidv4()}.pdf`;
-      // Here, you can store the base64 data and file name in a database if needed
-      return { base64String, fileName };
+      const filePath = path.join(tmpDir, fileName);
+
+      // Save the file temporarily
+      fs.writeFileSync(filePath, buffer);
+
+      // Return the file path (it will not be accessible after execution, this is just for processing during the execution)
+      return `/tmp/${fileName}`;
     };
 
-    const document1Data = await saveFile(document1, "doc1");
-    const document2Data = await saveFile(document2, "doc2");
+    // Save both files temporarily
+    const document1Path = await saveFile(document1, "doc1");
+    const document2Path = await saveFile(document2, "doc2");
 
+    // Return response with the file paths (note: these paths will only exist during this request's lifecycle)
     return NextResponse.json(
       {
         success: true,
         message: "Documents uploaded successfully. User verified successfully.",
         status: "verified",
         documents: {
-          document_1: document1Data.base64String,
-          document_2: document2Data.base64String,
+          document_1: document1Path,
+          document_2: document2Path,
         },
       },
       { status: 200 }
