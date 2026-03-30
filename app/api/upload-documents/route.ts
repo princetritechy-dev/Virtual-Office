@@ -1,8 +1,7 @@
-// app/api/upload-documents/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
-import path from 'path';
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,41 +37,37 @@ export async function POST(req: NextRequest) {
 
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    // Temporary directory for storing the files
-    const tmpDir = '/tmp'; // Vercel's writable file system for serverless functions
+    // Save file in the public/uploads/documents/ directory
+    const uploadDir = path.join(process.cwd(), "public", "uploads", "documents");
 
-    // Create the directory inside /tmp if it doesn't exist
-    if (!fs.existsSync(tmpDir)) {
-      fs.mkdirSync(tmpDir, { recursive: true });
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    // Function to save the file to /tmp
     const saveFile = async (file: File, label: string) => {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const fileName = `${safeEmail}_${label}_${uuidv4()}.pdf`;
-      const filePath = path.join(tmpDir, fileName);
+      const filePath = path.join(uploadDir, fileName);
 
-      // Save the file temporarily
       fs.writeFileSync(filePath, buffer);
 
-      // Return the file path (it will not be accessible after execution, this is just for processing during the execution)
-      return `/tmp/${fileName}`;
+      // Return the relative URL of the file for access
+      return `/uploads/documents/${fileName}`;
     };
 
-    // Save both files temporarily
-    const document1Path = await saveFile(document1, "doc1");
-    const document2Path = await saveFile(document2, "doc2");
+    const document1Url = await saveFile(document1, "doc1");
+    const document2Url = await saveFile(document2, "doc2");
 
-    // Return response with the file paths (note: these paths will only exist during this request's lifecycle)
     return NextResponse.json(
       {
         success: true,
         message: "Documents uploaded successfully. User verified successfully.",
         status: "verified",
         documents: {
-          document_1: document1Path,
-          document_2: document2Path,
+          document_1: document1Url,
+          document_2: document2Url,
         },
       },
       { status: 200 }
