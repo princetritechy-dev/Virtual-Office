@@ -3,6 +3,11 @@ import fs from "fs";
 import path from "path";
 
 export async function POST(req: NextRequest) {
+  const res = NextResponse.next();
+    // Allow CORS for all origins (adjust as necessary for your use case)
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
   try {
     const formData = await req.formData();
 
