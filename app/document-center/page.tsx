@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -213,7 +211,7 @@ export default function DocumentCenterPage() {
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
                     <a
-                      href={uploadedDocs.document_1}
+                      href={uploadedDocs.document_1}  // Ensure this is a valid URL
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
@@ -245,7 +243,7 @@ export default function DocumentCenterPage() {
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
                     <a
-                      href={uploadedDocs.document_2}
+                      href={uploadedDocs.document_2}  // Ensure this is a valid URL
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
