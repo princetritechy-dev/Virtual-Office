@@ -370,16 +370,21 @@ p.muted-two {
 }
 
 .userDropdown{
-  position:absolute;
-  top:calc(100% + 10px);
-  right:0;
-  min-width:170px;
-  background:#ffffff;
-  border:1px solid #e5e7eb;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  border-radius:12px;
-  overflow:hidden;
-  z-index:999;
+z-index: 999;
+    text-align: center;
+    background: #02a699;
+    border: 1px solid #02a699;
+    border-radius: 11px;
+    padding: 12px 33px;
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px #00000014;
+    display: flex;
+    flex-direction: column;
+    row-gap: 13px;
+    color: #ffffff;
 }
 
 .dropdownItem{
