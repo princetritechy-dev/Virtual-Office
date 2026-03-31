@@ -72,15 +72,6 @@ export default function Header({ portalMode = false }: HeaderProps) {
 
   // 👇 Avatar UI (reuse everywhere)
   const renderAvatar = () => {
-    if (faceImageUrl) {
-      return (
-        <img
-          src={faceImageUrl}
-          alt={user?.name || "User"}
-          className="headerAvatarImage"
-        />
-      );
-    }
 
     return (
       <span className="headerAvatar">
