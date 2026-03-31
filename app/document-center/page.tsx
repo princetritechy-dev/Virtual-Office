@@ -212,7 +212,7 @@ export default function DocumentCenterPage() {
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
                     <a
-                      href={uploadedDocs.document_1}  // Ensure this is a valid URL
+                      href={uploadedDocs.document_1}  // This will be accessible as public URL
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
@@ -244,7 +244,7 @@ export default function DocumentCenterPage() {
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
                     <a
-                      href={uploadedDocs.document_2}  // Ensure this is a valid URL
+                      href={uploadedDocs.document_2}  // This will be accessible as public URL
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
