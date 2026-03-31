@@ -11,7 +11,6 @@ export async function POST(req: NextRequest) {
     const document1 = formData.get("document_1") as File | null;
     const document2 = formData.get("document_2") as File | null;
 
-    // Check if user is logged in
     if (!user_email) {
       return NextResponse.json(
         { success: false, message: "User not logged in. Please login again." },
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Ensure both documents are uploaded
     if (!document1 || !document2) {
       return NextResponse.json(
         { success: false, message: "Both documents are required." },
@@ -27,7 +25,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Ensure both files are PDFs
     if (
       document1.type !== "application/pdf" ||
       document2.type !== "application/pdf"
@@ -38,10 +35,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Sanitize the email to avoid invalid characters in filenames
+    // Sanitize email for filename
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    // Use the /tmp directory for Vercel's temporary storage
+    // Use the /tmp directory for temporary storage
     const uploadDir = "/tmp/uploads/documents"; // Temporary storage path
 
     // Ensure the directory exists in the temporary storage
@@ -49,27 +46,27 @@ export async function POST(req: NextRequest) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    // Function to save a file to /tmp
+    // Function to save a file to /tmp (temporary storage)
     const saveFile = async (file: File, label: string) => {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const fileName = `${safeEmail}_${label}_${uuidv4()}.pdf`;
+      const fileName = `${safeEmail}_${label}.pdf`;
       const filePath = path.join(uploadDir, fileName);
 
       fs.writeFileSync(filePath, buffer);
 
       // Return the relative URL of the file for access
-      return `/uploads/documents/${fileName}`;
+      return `/tmp/uploads/documents/${fileName}`;
     };
 
-    // Save both documents to the temporary directory
+    // Save both documents
     const document1Url = await saveFile(document1, "doc1");
     const document2Url = await saveFile(document2, "doc2");
 
     return NextResponse.json(
       {
         success: true,
-        message: "Documents uploaded successfully. User verified successfully.",
+        message: "Documents uploaded successfully.",
         status: "verified",
         documents: {
           document_1: document1Url,
