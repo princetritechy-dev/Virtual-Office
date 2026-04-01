@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/header";
@@ -37,15 +37,16 @@ export default function DocumentCenterPage() {
   const doc1InputRef = useRef<HTMLInputElement | null>(null);
   const doc2InputRef = useRef<HTMLInputElement | null>(null);
 
+  // Fetch user data from localStorage and WP API
   useEffect(() => {
     const token = localStorage.getItem("wp_token");
-    const savedUser = localStorage.getItem("wp_user");
 
     if (!token) {
       router.push("/login");
       return;
     }
 
+    const savedUser = localStorage.getItem("wp_user");
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
@@ -73,7 +74,6 @@ export default function DocumentCenterPage() {
           ...data,
           email: data?.email || "",
         };
-
         setUser(finalUser);
         localStorage.setItem("wp_user", JSON.stringify(finalUser));
       })
@@ -87,24 +87,21 @@ export default function DocumentCenterPage() {
       });
   }, [router]);
 
+  // Fetch verification status from API and localStorage
   useEffect(() => {
-    if (!user?.email) return;
+    const storedStatus = localStorage.getItem("verificationStatus");
+    const storedDocument1 = localStorage.getItem("document1Url");
+    const storedDocument2 = localStorage.getItem("document2Url");
 
-    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setStatus(data?.status || "not_uploaded");
-        setUploadedDocs({
-          document_1: data?.documents?.document_1 || "",
-          document_2: data?.documents?.document_2 || "",
-        });
-      })
-      .catch((err) => {
-        console.error("Status fetch error:", err);
-      });
-  }, [user?.email]);
+    if (storedStatus) {
+      setStatus(storedStatus);  // Use status from localStorage
+    }
+
+    setUploadedDocs({
+      document_1: storedDocument1 || "",
+      document_2: storedDocument2 || "",
+    });
+  }, []);
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,6 +145,11 @@ export default function DocumentCenterPage() {
           document_2: data?.documents?.document_2 || "",
         });
 
+        // Store status and document URLs in localStorage
+        localStorage.setItem("verificationStatus", data.status || "verified");
+        localStorage.setItem("document1Url", data?.documents?.document_1 || "");
+        localStorage.setItem("document2Url", data?.documents?.document_2 || "");
+
         setDoc1(null);
         setDoc2(null);
 
@@ -179,12 +181,7 @@ export default function DocumentCenterPage() {
   return (
     <main>
       <Header portalMode />
-
-      <PortalLayout
-        user={user}
-        title="Document Center"
-        subtitle="Upload your PDF documents for verification"
-      >
+      <PortalLayout user={user} title="Document Center" subtitle="Upload your PDF documents for verification">
         <div className="doc-container">
           <div className="doc-status-row">
             <h2>Document Verification</h2>
@@ -211,19 +208,10 @@ export default function DocumentCenterPage() {
 
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
-                    <a
-                      href={uploadedDocs.document_1}  // Ensure this is a valid URL
-                      target="_blank"
-                      rel="noreferrer"
-                      className="doc-link"
-                    >
+                    <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
                       View Uploaded Document 1
                     </a>
-                    <button
-                      type="button"
-                      className="doc-reupload-btn"
-                      onClick={handleReupload1}
-                    >
+                    <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
                       Re-upload
                     </button>
                   </div>
@@ -243,19 +231,10 @@ export default function DocumentCenterPage() {
 
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
-                    <a
-                      href={uploadedDocs.document_2}  // Ensure this is a valid URL
-                      target="_blank"
-                      rel="noreferrer"
-                      className="doc-link"
-                    >
+                    <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
                       View Uploaded Document 2
                     </a>
-                    <button
-                      type="button"
-                      className="doc-reupload-btn"
-                      onClick={handleReupload2}
-                    >
+                    <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
                       Re-upload
                     </button>
                   </div>
@@ -271,7 +250,6 @@ export default function DocumentCenterPage() {
           {message && <p className="doc-message">{message}</p>}
         </div>
       </PortalLayout>
-
       <Footer />
     </main>
   );
