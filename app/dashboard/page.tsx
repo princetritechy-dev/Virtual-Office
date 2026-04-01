@@ -5,7 +5,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import PortalLayout from "../components/portal-layout";
 import "../components/portal-layout.css";
-import "./doc.css";
+import "./dashboard.css";
 
 type UserProfile = {
   id?: number;
