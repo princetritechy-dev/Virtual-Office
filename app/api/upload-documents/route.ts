@@ -10,12 +10,19 @@ export async function POST(req: NextRequest) {
   try {
     // Parse incoming form data
     const formData = await req.formData();
-    const userEmail = formData.get("user_email")?.trim();
+    
+    const userEmail = formData.get("user_email");
+    if (typeof userEmail === "string") {
+      const trimmedEmail = userEmail.trim();
+    } else {
+      return NextResponse.json({ success: false, message: "Invalid user email" }, { status: 400 });
+    }
+
     const document1 = formData.get("document_1") as File | null;
     const document2 = formData.get("document_2") as File | null;
 
     // Ensure all required fields are present
-    if (!userEmail || !document1 || !document2) {
+    if (!trimmedEmail || !document1 || !document2) {
       return NextResponse.json({ success: false, message: "User email and both documents are required." }, { status: 400 });
     }
 
@@ -33,7 +40,7 @@ export async function POST(req: NextRequest) {
     const saveFileTemp = async (file: File, label: string) => {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const fileName = `${userEmail}_${label}_${uuidv4()}.pdf`;
+      const fileName = `${trimmedEmail}_${label}_${uuidv4()}.pdf`;
       const filePath = path.join(TMP_DIR, fileName);
 
       // Write the file to /tmp
@@ -47,14 +54,13 @@ export async function POST(req: NextRequest) {
     const document1Path = await saveFileTemp(document1, "doc1");
     const document2Path = await saveFileTemp(document2, "doc2");
 
-
     return NextResponse.json({
       success: true,
       message: "Documents uploaded successfully.",
-      status: "verified",
+      status: "verified", // Status can be customized as per your requirements
       documents: {
-        document_1: document1Path,
-        document_2: document2Path,
+        document_1: document1Path,  // Return the temporary path
+        document_2: document2Path,  // Return the temporary path
       },
     }, { status: 200 });
   } catch (error) {
