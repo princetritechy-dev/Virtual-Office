@@ -103,68 +103,68 @@ export default function DocumentCenterPage() {
     });
   }, []);
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleUpload = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!user?.email) {
-      setMessage("User not logged in. Please login again.");
-      return;
-    }
+  if (!user?.email) {
+    setMessage("User not logged in. Please login again.");
+    return;
+  }
 
-    if (!doc1 || !doc2) {
-      setMessage("Please upload both PDF documents.");
-      return;
-    }
+  if (!doc1 || !doc2) {
+    setMessage("Please upload both PDF documents.");
+    return;
+  }
 
-    if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
-      setMessage("Only PDF files are allowed.");
-      return;
-    }
+  if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
+    setMessage("Only PDF files are allowed.");
+    return;
+  }
 
-    setUploading(true);
-    setMessage("");
+  setUploading(true);
+  setMessage("");
 
-    try {
-      const formData = new FormData();
-      formData.append("user_email", user.email);
-      formData.append("document_1", doc1);
-      formData.append("document_2", doc2);
+  try {
+    const formData = new FormData();
+    formData.append("user_email", user.email);
+    formData.append("document_1", doc1);
+    formData.append("document_2", doc2);
 
-      const res = await fetch("/api/upload-documents", {
-        method: "POST",
-        body: formData,
+    const res = await fetch("/api/upload-documents", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      setMessage(data.message || "Documents uploaded successfully.");
+      setStatus(data.status || "verified");
+      setUploadedDocs({
+        document_1: data?.documents?.document_1 || "",
+        document_2: data?.documents?.document_2 || "",
       });
 
-      const data = await res.json();
+      // Store verification status and document URLs in localStorage
+      localStorage.setItem('verificationStatus', data.status || 'verified');
+      localStorage.setItem('document1Url', data?.documents?.document_1 || '');
+      localStorage.setItem('document2Url', data?.documents?.document_2 || '');
 
-      if (res.ok && data.success) {
-        setMessage(data.message || "Documents uploaded successfully.");
-        setStatus(data.status || "verified");
-        setUploadedDocs({
-          document_1: data?.documents?.document_1 || "",
-          document_2: data?.documents?.document_2 || "",
-        });
+      setDoc1(null);
+      setDoc2(null);
 
-        // Store status and document URLs in localStorage
-        localStorage.setItem("verificationStatus", data.status || "verified");
-        localStorage.setItem("document1Url", data?.documents?.document_1 || "");
-        localStorage.setItem("document2Url", data?.documents?.document_2 || "");
-
-        setDoc1(null);
-        setDoc2(null);
-
-        if (doc1InputRef.current) doc1InputRef.current.value = "";
-        if (doc2InputRef.current) doc2InputRef.current.value = "";
-      } else {
-        setMessage(data.message || "Upload failed.");
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
-      setMessage("Something went wrong during upload.");
-    } finally {
-      setUploading(false);
+      if (doc1InputRef.current) doc1InputRef.current.value = "";
+      if (doc2InputRef.current) doc2InputRef.current.value = "";
+    } else {
+      setMessage(data.message || "Upload failed.");
     }
-  };
+  } catch (error) {
+    console.error("Upload error:", error);
+    setMessage("Something went wrong during upload.");
+  } finally {
+    setUploading(false);
+  }
+};
 
   const handleReupload1 = () => {
     if (doc1InputRef.current) doc1InputRef.current.click();
