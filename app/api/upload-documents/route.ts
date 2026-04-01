@@ -10,10 +10,11 @@ export async function POST(req: NextRequest) {
   try {
     // Parse incoming form data
     const formData = await req.formData();
-    
     const userEmail = formData.get("user_email");
+
+    // Ensure the user email is a string and trim it
     if (typeof userEmail === "string") {
-      const trimmedEmail = userEmail.trim();
+      const trimmedEmail = userEmail.trim(); // Now we have trimmedEmail properly assigned
     } else {
       return NextResponse.json({ success: false, message: "Invalid user email" }, { status: 400 });
     }
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
     const document2 = formData.get("document_2") as File | null;
 
     // Ensure all required fields are present
-    if (!trimmedEmail || !document1 || !document2) {
+    if (!userEmail || !document1 || !document2) {
       return NextResponse.json({ success: false, message: "User email and both documents are required." }, { status: 400 });
     }
 
