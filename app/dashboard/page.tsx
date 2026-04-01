@@ -1,50 +1,92 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import PortalLayout from "./components/portal-layout";
-import "./components/portal-layout.css";
-import "/doc.css";
+import Header from "../components/header";
+import Footer from "../components/footer";
+import PortalLayout from "../components/portal-layout";
+import "../components/portal-layout.css";
+import "./doc.css";
+
+type UserProfile = {
+  id?: number;
+  name?: string;
+  slug?: string;
+  email?: string;
+};
+
+type ChargebeeProduct = {
+  id: string;
+  name: string;
+  price: number;
+  currency_code: string;
+  period_unit: string;
+  period: number;
+  item_id: string;
+  description?: string;
+  image?: string;
+};
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [verificationStatus, setVerificationStatus] = useState("not_uploaded");
-  const [showVerificationPopup, setShowVerificationPopup] = useState(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [products, setProducts] = useState<ChargebeeProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [productLoading, setProductLoading] = useState(true);
+  const [productError, setProductError] = useState("");
+  const [billingMode, setBillingMode] = useState<"monthly" | "yearly">("monthly");
+  const [verificationStatus, setVerificationStatus] = useState("loading");
+  const [showVerificationPopup, setShowVerificationPopup] = useState(false);
 
+  // Fetch user data from localStorage and WP API
   useEffect(() => {
-    // Fetch user data
     const token = localStorage.getItem("wp_token");
-    const savedUser = localStorage.getItem("wp_user");
 
     if (!token) {
-      router.push("/login"); // Redirect if no token found
+      router.push("/login");
       return;
     }
 
-    if (savedUser) {
-      try {
-        const parsed = JSON.parse(savedUser);
-        if (parsed?.email) {
-          setUser(parsed); // Set user from localStorage
+    fetch(`${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Unauthorized");
         }
-      } catch (error) {
-        console.error("wp_user parse error:", error);
-      }
-    }
+        return res.json();
+      })
+      .then((data) => {
+        const finalUser = {
+          ...data,
+          email: data?.email || "",
+        };
+        setUser(finalUser);
+        localStorage.setItem("wp_user", JSON.stringify(finalUser));
+      })
+      .catch(() => {
+        localStorage.removeItem("wp_token");
+        localStorage.removeItem("wp_user");
+        router.push("/login");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [router]);
 
-    // Fetch user verification status
-    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user?.email)}`, {
+  // Fetch verification status
+  useEffect(() => {
+    if (!user?.email) return;
+
+    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
       cache: "no-store",
     })
       .then((res) => res.json())
       .then((data) => {
-        const status = data?.status || "not_uploaded"; // Default to not_uploaded if no status
+        const status = data?.status || "not_uploaded";
         setVerificationStatus(status);
 
-        // Show the popup if the status is "not_uploaded" or "pending"
         if (status === "not_uploaded" || status === "pending") {
           setShowVerificationPopup(true);
         } else {
@@ -53,25 +95,76 @@ export default function DashboardPage() {
       })
       .catch((err) => {
         console.error("Verification status fetch error:", err);
-        setVerificationStatus("error"); // Handle error status
+        setVerificationStatus("error");
+      });
+  }, [user?.email]);
+
+  // Fetch products from Chargebee API
+  useEffect(() => {
+    fetch("/api/chargebee/products", {
+      cache: "no-store",
+    })
+      .then(async (res) => {
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || "Failed to fetch Chargebee products");
+        }
+
+        return data;
+      })
+      .then((data) => {
+        setProducts(Array.isArray(data.products) ? data.products : []);
+      })
+      .catch((err) => {
+        console.error("Chargebee product fetch error:", err);
+        setProductError(err.message || "Failed to fetch products");
       })
       .finally(() => {
-        setLoading(false); // Stop loading once data is fetched
+        setProductLoading(false);
       });
-  }, [user?.email, router]);
+  }, []);
 
-  useEffect(() => {
-    // Update the popup visibility based on verification status
-    if (verificationStatus === "not_uploaded" || verificationStatus === "pending") {
-      setShowVerificationPopup(true);
-    } else {
-      setShowVerificationPopup(false);
+  const formatPrice = (amount: number, currency: string) => {
+    const value = amount / 100;
+
+    try {
+      return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: currency || "GBP",
+      }).format(value);
+    } catch {
+      return `${value.toFixed(2)} ${currency}`;
     }
-  }, [verificationStatus]);
+  };
+
+  const handleBuyNow = (product: ChargebeeProduct) => {
+    const cartItem = {
+      id: product.id,
+      item_price_id: product.id,
+      item_id: product.item_id,
+      name: product.name,
+      price: product.price,
+      currency_code: product.currency_code,
+      period: product.period,
+      period_unit: product.period_unit,
+      description: product.description || "",
+      image: product.image || "",
+      quantity: 1,
+    };
+
+    localStorage.setItem("chargebee_cart", JSON.stringify(cartItem));
+    router.push("/cart");
+  };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>; // Show loading indicator until data is loaded
+    return <div className="dashboardPage loadingText">Loading...</div>;
   }
+
+  const filteredProducts = products.filter((product) => {
+    const unit = product.period_unit?.toLowerCase();
+    return billingMode === "monthly" ? unit === "month" : unit === "year";
+  });
 
   return (
     <main>
@@ -80,9 +173,9 @@ export default function DashboardPage() {
       <PortalLayout
         user={user}
         title="Dashboard"
-        subtitle="Your user dashboard"
+        subtitle={`Welcome ${user?.name || "User"}`}
       >
-        <div className="doc-container">
+        <div className="pro-container dashboardPage">
           <div className="verificationStatusWrap">
             <h2 className="sectionTitle">Verification Status</h2>
             <span className={`verificationBadge badge-${verificationStatus}`}>
