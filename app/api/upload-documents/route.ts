@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
 
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    // Save file in the public/uploads/documents/ directory
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "documents");
+    // Store files in /tmp directory for Vercel
+    const uploadDir = path.join("/tmp", "documents");
 
     // Ensure the directory exists
     if (!fs.existsSync(uploadDir)) {
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       fs.writeFileSync(filePath, buffer);
 
       // Return the relative URL of the file for access
-      return `/uploads/documents/${fileName}`;
+      return `/tmp/documents/${fileName}`;
     };
 
     const document1Url = await saveFile(document1, "doc1");
