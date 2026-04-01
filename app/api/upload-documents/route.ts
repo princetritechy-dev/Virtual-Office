@@ -35,38 +35,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Sanitize email for filename
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    // Use the /tmp directory for temporary storage
-    const uploadDir = "/tmp/uploads/documents"; // Temporary storage path
+    // Save file in the public/uploads/documents/ directory
+    const uploadDir = path.join(process.cwd(), "public", "uploads", "documents");
 
-    // Ensure the directory exists in the temporary storage
+    // Ensure the directory exists
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    // Function to save a file to /tmp (temporary storage)
     const saveFile = async (file: File, label: string) => {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const fileName = `${safeEmail}_${label}.pdf`;
+      const fileName = `${safeEmail}_${label}_${uuidv4()}.pdf`;
       const filePath = path.join(uploadDir, fileName);
 
       fs.writeFileSync(filePath, buffer);
 
       // Return the relative URL of the file for access
-      return `/tmp/uploads/documents/${fileName}`;
+      return `/uploads/documents/${fileName}`;
     };
 
-    // Save both documents
     const document1Url = await saveFile(document1, "doc1");
     const document2Url = await saveFile(document2, "doc2");
 
     return NextResponse.json(
       {
         success: true,
-        message: "Documents uploaded successfully.",
+        message: "Documents uploaded successfully. User verified successfully.",
         status: "verified",
         documents: {
           document_1: document1Url,
