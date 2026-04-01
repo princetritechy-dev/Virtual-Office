@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -67,11 +67,13 @@ export default function DashboardPage() {
       });
   }, [router]);
 
-  // Check verification status from localStorage
+  // Fetch the verification status from localStorage when the page loads
   useEffect(() => {
     const storedStatus = localStorage.getItem("verificationStatus");
+
     if (storedStatus) {
       setVerificationStatus(storedStatus); // Set status from localStorage
+      // Show verification popup if the status is 'not_uploaded' or 'pending'
       if (storedStatus === "not_uploaded" || storedStatus === "pending") {
         setShowVerificationPopup(true);
       } else {
