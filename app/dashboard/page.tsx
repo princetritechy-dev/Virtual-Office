@@ -76,29 +76,19 @@ export default function DashboardPage() {
       });
   }, [router]);
 
-  // Fetch verification status
+  // Fetch verification status from localStorage
   useEffect(() => {
-    if (!user?.email) return;
+    const storedStatus = localStorage.getItem("verificationStatus");
 
-    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const status = data?.status || "not_uploaded";
-        setVerificationStatus(status);
-
-        if (status === "not_uploaded" || status === "pending") {
-          setShowVerificationPopup(true);
-        } else {
-          setShowVerificationPopup(false);
-        }
-      })
-      .catch((err) => {
-        console.error("Verification status fetch error:", err);
-        setVerificationStatus("error");
-      });
-  }, [user?.email]);
+    if (storedStatus) {
+      setVerificationStatus(storedStatus); // Set status from localStorage
+      if (storedStatus === "not_uploaded" || storedStatus === "pending") {
+        setShowVerificationPopup(true); // Show popup if verification is pending or not uploaded
+      } else {
+        setShowVerificationPopup(false);
+      }
+    }
+  }, []);
 
   // Fetch products from Chargebee API
   useEffect(() => {
