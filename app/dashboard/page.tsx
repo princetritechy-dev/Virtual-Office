@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import PortalLayout from "../components/portal-layout";
-import "../components/portal-layout.css";
-import "./doc.css";
+import Header from "./components/header";
+import Footer from "./components/footer";
+import PortalLayout from "./components/portal-layout";
+import "./components/portal-layout.css";
+import "/doc.css";
 
 export default function DashboardPage() {
   const router = useRouter();
