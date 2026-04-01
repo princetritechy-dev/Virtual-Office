@@ -7,17 +7,14 @@ export async function GET(req: NextRequest) {
     const user_email = req.nextUrl.searchParams.get("user_email")?.trim();
 
     if (!user_email) {
-      return NextResponse.json(
-        {
-          success: false,
-          status: "not_uploaded",
-          documents: {
-            document_1: "",
-            document_2: "",
-          },
+      return NextResponse.json({
+        success: false,
+        status: "not_uploaded",
+        documents: {
+          document_1: "",
+          document_2: "",
         },
-        { status: 200 }
-      );
+      }, { status: 200 });
     }
 
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
