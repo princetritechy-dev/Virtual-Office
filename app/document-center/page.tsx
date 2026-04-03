@@ -39,7 +39,9 @@ export default function DocumentCenterPage() {
   const doc1InputRef = useRef<HTMLInputElement | null>(null);
   const doc2InputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fetch user
+  // =============================
+  // Fetch User
+  // =============================
   useEffect(() => {
     const token = localStorage.getItem("wp_user_token");
     const savedUser = localStorage.getItem("wp_user_data");
@@ -52,18 +54,14 @@ export default function DocumentCenterPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed?.email) {
-          setUser(parsed);
-        }
-      } catch (error) {
-        console.error("User parse error:", error);
+        if (parsed?.email) setUser(parsed);
+      } catch (err) {
+        console.error("User parse error:", err);
       }
     }
 
     fetch(`${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     })
       .then((res) => {
@@ -71,10 +69,7 @@ export default function DocumentCenterPage() {
         return res.json();
       })
       .then((data) => {
-        const finalUser = {
-          ...data,
-          email: data?.email || "",
-        };
+        const finalUser = { ...data, email: data?.email || "" };
         setUser(finalUser);
         localStorage.setItem("wp_user_data", JSON.stringify(finalUser));
       })
@@ -86,7 +81,9 @@ export default function DocumentCenterPage() {
       .finally(() => setLoadingUser(false));
   }, [router]);
 
-  // Fetch verification status
+  // =============================
+  // Fetch Verification Status
+  // =============================
   useEffect(() => {
     if (!user?.email) return;
 
@@ -102,37 +99,37 @@ export default function DocumentCenterPage() {
         });
         setAdminNote(data?.admin_note || "");
       })
-      .catch((err) => {
-        console.error("Status fetch error:", err);
-      });
+      .catch((err) => console.error("Status fetch error:", err));
   }, [user?.email]);
 
+  // =============================
+  // Upload Handler
+  // =============================
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user?.email) {
-      setMessage("User not logged in.");
-      return;
-    }
-
     const token = localStorage.getItem("wp_user_token");
 
-    if (!token) {
+    if (!user?.email || !token) {
       setMessage("Please login again.");
       router.push("/login");
       return;
     }
 
     if (!doc1 || !doc2) {
-      setMessage("Upload both documents.");
+      setMessage("Please upload both documents.");
       return;
     }
 
-    if (
-      doc1.type !== "application/pdf" ||
-      doc2.type !== "application/pdf"
-    ) {
-      setMessage("Only PDFs allowed.");
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+    if (doc1.size > MAX_FILE_SIZE || doc2.size > MAX_FILE_SIZE) {
+      setMessage("Files must be less than 5MB.");
+      return;
+    }
+
+    if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
+      setMessage("Only PDF files allowed.");
       return;
     }
 
@@ -147,16 +144,14 @@ export default function DocumentCenterPage() {
 
       const res = await fetch("/api/upload-documents", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setMessage(data.message);
+        setMessage(data.message || "Documents uploaded successfully.");
         setStatus(data.status || "pending");
         setUploadedDocs({
           document_1: data?.documents?.document_1 || "",
@@ -166,46 +161,116 @@ export default function DocumentCenterPage() {
 
         localStorage.setItem("verificationStatus", data.status || "pending");
 
+        setDoc1(null);
+        setDoc2(null);
+
         if (doc1InputRef.current) doc1InputRef.current.value = "";
         if (doc2InputRef.current) doc2InputRef.current.value = "";
       } else {
         setMessage(data.message || "Upload failed.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Upload error:", err);
       setMessage("Upload error.");
     } finally {
       setUploading(false);
     }
   };
 
-  if (loadingUser) return <div>Loading...</div>;
+  const handleReupload1 = () => doc1InputRef.current?.click();
+  const handleReupload2 = () => doc2InputRef.current?.click();
+
+  if (loadingUser) {
+    return <div className="doc-loading">Loading...</div>;
+  }
 
   return (
     <main>
       <Header portalMode />
-      <PortalLayout user={user} title="Document Center" subtitle="Upload your documents">
-        <form onSubmit={handleUpload}>
-          <input
-            ref={doc1InputRef}
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setDoc1(e.target.files?.[0] || null)}
-          />
+      <PortalLayout user={user} title="Document Center" subtitle="Upload your PDF documents for verification">
+        <div className="doc-container">
+          
+          <div className="doc-status-row">
+            <h2>Document Verification</h2>
+            <span className={`doc-status-badge status-${status}`}>
+              {status === "verified" && "Verified"}
+              {status === "pending" && "Pending Approval"}
+              {status === "rejected" && "Rejected"}
+              {status === "not_uploaded" && "Not Uploaded"}
+            </span>
+          </div>
 
-          <input
-            ref={doc2InputRef}
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setDoc2(e.target.files?.[0] || null)}
-          />
+          <form onSubmit={handleUpload} className="doc-form">
+            <div className="doc-flex">
 
-          <button type="submit" disabled={uploading}>
-            {uploading ? "Uploading..." : "Upload"}
-          </button>
-        </form>
+              {/* Document 1 */}
+              <div className="doc-box">
+                <p>Upload Document 1 (PDF only)</p>
+                <input
+                  ref={doc1InputRef}
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => setDoc1(e.target.files?.[0] || null)}
+                  required={!uploadedDocs.document_1}
+                />
+                {doc1 && <span className="doc-file-name">{doc1.name}</span>}
 
-        {message && <p>{message}</p>}
+                {uploadedDocs.document_1 && (
+                  <div className="uploaded-doc-card">
+                    <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
+                      View Uploaded Document 1
+                    </a>
+                    <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
+                      Re-upload
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Document 2 */}
+              <div className="doc-box">
+                <p>Upload Document 2 (PDF only)</p>
+                <input
+                  ref={doc2InputRef}
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => setDoc2(e.target.files?.[0] || null)}
+                  required={!uploadedDocs.document_2}
+                />
+                {doc2 && <span className="doc-file-name">{doc2.name}</span>}
+
+                {uploadedDocs.document_2 && (
+                  <div className="uploaded-doc-card">
+                    <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
+                      View Uploaded Document 2
+                    </a>
+                    <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
+                      Re-upload
+                    </button>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            <button type="submit" disabled={uploading}>
+              {uploading ? "Uploading..." : "Upload Documents"}
+            </button>
+          </form>
+
+          {message && <p className="doc-message">{message}</p>}
+
+          {status === "pending" && (
+            <p className="doc-message">
+              Your documents are uploaded and waiting for admin approval.
+            </p>
+          )}
+
+          {adminNote && status === "rejected" && (
+            <p className="doc-message">Admin Note: {adminNote}</p>
+          )}
+
+        </div>
       </PortalLayout>
       <Footer />
     </main>
