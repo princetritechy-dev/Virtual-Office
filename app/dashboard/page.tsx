@@ -77,10 +77,6 @@ export default function DashboardPage() {
       });
   }, [router]);
 
-<<<<<<< HEAD
-  // Fetch verification status from localStorage
-=======
->>>>>>> 0e31287 (Updated Code)
   useEffect(() => {
     const storedStatus = localStorage.getItem("verificationStatus");
 
