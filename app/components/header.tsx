@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 type HeaderProps = {
   portalMode?: boolean;
+  adminMode?: boolean;
 };
 
 type StoredUser = {
@@ -13,33 +14,45 @@ type StoredUser = {
   email?: string;
 };
 
-export default function Header({ portalMode = false }: HeaderProps) {
+export default function Header({
+  portalMode = false,
+  adminMode = false,
+}: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<StoredUser | null>(null);
   const [authMenuOpen, setAuthMenuOpen] = useState(false);
-  const [faceImageUrl, setFaceImageUrl] = useState("");
 
   const authDropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("wp_token");
-    const savedUser = localStorage.getItem("wp_user");
-    const savedFace = localStorage.getItem("face_image_url");
+    const syncAuthState = () => {
+      const token = localStorage.getItem("wp_token");
+      const savedUser = localStorage.getItem("wp_user");
 
-    setIsLoggedIn(!!token);
+      let parsedUser: StoredUser | null = null;
 
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch {
-        setUser(null);
+      if (savedUser) {
+        try {
+          parsedUser = JSON.parse(savedUser);
+        } catch {
+          parsedUser = null;
+        }
       }
-    }
 
-    if (savedFace) {
-      setFaceImageUrl(savedFace);
-    }
+      setUser(parsedUser);
+      setIsLoggedIn(!!token || !!parsedUser?.name || !!parsedUser?.email);
+    };
+
+    syncAuthState();
+
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("focus", syncAuthState);
+
+    return () => {
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("focus", syncAuthState);
+    };
   }, []);
 
   useEffect(() => {
@@ -58,35 +71,20 @@ export default function Header({ portalMode = false }: HeaderProps) {
     };
   }, []);
 
-  const getInitials = (name?: string) => {
-    if (!name) return "U";
-    const parts = name.trim().split(" ").filter(Boolean);
-    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-    return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
-  };
-
   const closeMenus = () => {
     setMenuOpen(false);
     setAuthMenuOpen(false);
   };
 
-  // 👇 Avatar UI (reuse everywhere)
-  const renderAvatar = () => {
-
-    return (
-      <span className="headerAvatar">
-        {getInitials(user?.name)}
-      </span>
-    );
-  };
-
   return (
-    <header className={`nav ${portalMode ? "portalHeader" : ""}`}>
+    <header
+      className={`nav ${portalMode ? "portalHeader" : ""} ${
+        adminMode ? "adminHeader" : ""
+      }`}
+    >
       <div className="container navInner">
-        
-        {/* LOGO */}
         <Link
-          href={isLoggedIn ? "/dashboard" : "/"}
+          href={adminMode ? "/admin/login" : isLoggedIn ? "/dashboard" : "/"}
           className="brand"
           onClick={closeMenus}
         >
@@ -100,10 +98,8 @@ export default function Header({ portalMode = false }: HeaderProps) {
           />
         </Link>
 
-        {!portalMode ? (
+        {!portalMode && !adminMode ? (
           <div className={`navWrapper ${menuOpen ? "open" : ""}`}>
-            
-            {/* MOBILE MENU */}
             <button
               className="hamburger"
               aria-label="Menu"
@@ -115,15 +111,21 @@ export default function Header({ portalMode = false }: HeaderProps) {
               <span></span>
             </button>
 
-            {/* NAV LINKS */}
             <nav className="navLinks" aria-label="Primary">
-              <Link href="/about-us/" onClick={closeMenus}>About Us</Link>
-              <Link href="/why-work-with-us/" onClick={closeMenus}>Why work with us</Link>
-              <Link href="/Listing/" onClick={closeMenus}>Locations</Link>
-              <Link href="/contact-us/" onClick={closeMenus}>Contact Us</Link>
+              <Link href="/about-us/" onClick={closeMenus}>
+                About Us
+              </Link>
+              <Link href="/why-work-with-us/" onClick={closeMenus}>
+                Why work with us
+              </Link>
+              <Link href="/Listing/" onClick={closeMenus}>
+                Locations
+              </Link>
+              <Link href="/contact-us/" onClick={closeMenus}>
+                Contact Us
+              </Link>
             </nav>
 
-            {/* RIGHT SIDE */}
             <div className="headerAuthLink">
               {isLoggedIn ? (
                 <Link
@@ -131,7 +133,17 @@ export default function Header({ portalMode = false }: HeaderProps) {
                   className="headerUserSummary"
                   onClick={closeMenus}
                 >
-                  {renderAvatar()}
+                  <span className="headerAvatar">
+                    {user?.name
+                      ? user.name
+                          .trim()
+                          .split(" ")
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .map((part) => part.charAt(0).toUpperCase())
+                          .join("")
+                      : "U"}
+                  </span>
                 </Link>
               ) : (
                 <div className="userMenuWrapper" ref={authDropdownRef}>
@@ -140,7 +152,14 @@ export default function Header({ portalMode = false }: HeaderProps) {
                     className="userIconButton"
                     onClick={() => setAuthMenuOpen((prev) => !prev)}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M20 21a8 8 0 0 0-16 0" />
                       <circle cx="12" cy="7" r="4" />
                     </svg>
@@ -148,8 +167,12 @@ export default function Header({ portalMode = false }: HeaderProps) {
 
                   {authMenuOpen && (
                     <div className="userDropdown">
-                      <Link href="/login/" onClick={closeMenus}>Login</Link>
-                      <Link href="/register/" onClick={closeMenus}>Register</Link>
+                      <Link href="/login/" onClick={closeMenus}>
+                        Login
+                      </Link>
+                      <Link href="/register/" onClick={closeMenus}>
+                        Register
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -157,38 +180,7 @@ export default function Header({ portalMode = false }: HeaderProps) {
             </div>
           </div>
         ) : (
-          
-          /* PORTAL HEADER */
-          <div className="portalHeaderRight">
-            {isLoggedIn ? (
-              <Link
-                href="/dashboard"
-                className="headerUserSummary portalUserSummary"
-              >
-                {renderAvatar()}
-              </Link>
-            ) : (
-              <div className="userMenuWrapper" ref={authDropdownRef}>
-                <button
-                  type="button"
-                  className="userIconButton"
-                  onClick={() => setAuthMenuOpen((prev) => !prev)}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21a8 8 0 0 0-16 0" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                </button>
-
-                {authMenuOpen && (
-                  <div className="userDropdown">
-                    <Link href="/login/" onClick={closeMenus}>Login</Link>
-                    <Link href="/register/" onClick={closeMenus}>Register</Link>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <div className="adminHeaderInner"></div>
         )}
       </div>
     </header>

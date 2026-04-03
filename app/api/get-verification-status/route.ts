@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,67 +13,79 @@ export async function GET(req: NextRequest) {
             document_1: "",
             document_2: "",
           },
+          admin_note: "",
         },
         { status: 200 }
       );
     }
 
-    const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const verificationFile = path.join(process.cwd(), "data", "verification.json");
+    const wpBaseUrl = process.env.NEXT_PUBLIC_WP_API;
 
-    if (!fs.existsSync(verificationFile)) {
-      return NextResponse.json({
-        success: true,
-        status: "not_uploaded",
-        documents: {
-          document_1: "",
-          document_2: "",
+    if (!wpBaseUrl) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "WordPress API URL missing.",
         },
-      });
+        { status: 500 }
+      );
     }
 
-    let verificationData: Record<string, any> = {};
+    const statusUrl = `${wpBaseUrl.replace(
+      /\/$/,
+      ""
+    )}/wp-json/custom/v1/get-verification-status?user_email=${encodeURIComponent(
+      user_email
+    )}`;
 
-    try {
-      verificationData = JSON.parse(fs.readFileSync(verificationFile, "utf-8"));
-    } catch {
-      verificationData = {};
-    }
-
-    const userRecord = verificationData[safeEmail];
-
-    if (!userRecord) {
-      return NextResponse.json({
-        success: true,
-        status: "not_uploaded",
-        documents: {
-          document_1: "",
-          document_2: "",
-        },
-      });
-    }
-
-    return NextResponse.json({
-      success: true,
-      status: userRecord.status || "not_uploaded",
-      documents: {
-        document_1: userRecord.document_1 || "",
-        document_2: userRecord.document_2 || "",
-      },
+    const res = await fetch(statusUrl, {
+      method: "GET",
+      cache: "no-store",
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          status: "not_uploaded",
+          documents: {
+            document_1: "",
+            document_2: "",
+          },
+          admin_note: "",
+        },
+        { status: 200 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        status: data?.status || "not_uploaded",
+        documents: {
+          document_1: data?.documents?.document_1 || "",
+          document_2: data?.documents?.document_2 || "",
+        },
+        admin_note: data?.admin_note || "",
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Verification status error:", error);
+    console.error("Verification status fetch error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        status: "error",
+        status: "not_uploaded",
         documents: {
           document_1: "",
           document_2: "",
         },
+        admin_note: "",
       },
-      { status: 500 }
+      { status: 200 }
     );
   }
 }

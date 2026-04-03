@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 "use client"
+=======
+"use client";
+
+>>>>>>> 0e31287 (Updated Code)
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/header";
@@ -29,6 +34,7 @@ export default function DocumentCenterPage() {
   const [doc1, setDoc1] = useState<File | null>(null);
   const [doc2, setDoc2] = useState<File | null>(null);
   const [status, setStatus] = useState("not_uploaded");
+  const [adminNote, setAdminNote] = useState("");
   const [uploadedDocs, setUploadedDocs] = useState<UploadedDocs>({
     document_1: "",
     document_2: "",
@@ -39,7 +45,12 @@ export default function DocumentCenterPage() {
 
   // Fetch user data from localStorage and WP API
   useEffect(() => {
+<<<<<<< HEAD
     const token = localStorage.getItem("wp_token");
+=======
+    const token = localStorage.getItem("wp_user_token");
+    const savedUser = localStorage.getItem("wp_user_data");
+>>>>>>> 0e31287 (Updated Code)
 
     if (!token) {
       router.push("/login");
@@ -54,7 +65,7 @@ export default function DocumentCenterPage() {
           setUser(parsed);
         }
       } catch (error) {
-        console.error("wp_user parse error:", error);
+        console.error("wp_user_data parse error:", error);
       }
     }
 
@@ -62,6 +73,7 @@ export default function DocumentCenterPage() {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      cache: "no-store",
     })
       .then((res) => {
         if (!res.ok) {
@@ -75,11 +87,11 @@ export default function DocumentCenterPage() {
           email: data?.email || "",
         };
         setUser(finalUser);
-        localStorage.setItem("wp_user", JSON.stringify(finalUser));
+        localStorage.setItem("wp_user_data", JSON.stringify(finalUser));
       })
       .catch(() => {
-        localStorage.removeItem("wp_token");
-        localStorage.removeItem("wp_user");
+        localStorage.removeItem("wp_user_token");
+        localStorage.removeItem("wp_user_data");
         router.push("/login");
       })
       .finally(() => {
@@ -93,6 +105,7 @@ export default function DocumentCenterPage() {
     const storedDocument1 = localStorage.getItem("document1Url");
     const storedDocument2 = localStorage.getItem("document2Url");
 
+<<<<<<< HEAD
     if (storedStatus) {
       setStatus(storedStatus);  // Use status from localStorage
     }
@@ -105,6 +118,56 @@ export default function DocumentCenterPage() {
 
 const handleUpload = async (e: React.FormEvent) => {
   e.preventDefault();
+=======
+    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
+      cache: "no-store",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setStatus(data?.status || "not_uploaded");
+        setUploadedDocs({
+          document_1: data?.documents?.document_1 || "",
+          document_2: data?.documents?.document_2 || "",
+        });
+        setAdminNote(data?.admin_note || "");
+      })
+      .catch((err) => {
+        console.error("Status fetch error:", err);
+      });
+  }, [user?.email]);
+
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!user?.email) {
+      setMessage("User not logged in. Please login again.");
+      return;
+    }
+
+    const token = localStorage.getItem("wp_user_token");
+
+    if (!token) {
+      setMessage("Authentication token not found. Please login again.");
+      router.push("/login");
+      return;
+    }
+
+    if (!doc1 || !doc2) {
+      setMessage("Please upload both PDF documents.");
+      return;
+    }
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    if (doc1.size > MAX_FILE_SIZE || doc2.size > MAX_FILE_SIZE) {
+      setMessage("Files must be less than 5MB.");
+      return;
+    }
+
+    if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
+      setMessage("Only PDF files are allowed.");
+      return;
+    }
+>>>>>>> 0e31287 (Updated Code)
 
   if (!user?.email) {
     setMessage("User not logged in. Please login again.");
@@ -116,6 +179,7 @@ const handleUpload = async (e: React.FormEvent) => {
     return;
   }
 
+<<<<<<< HEAD
   if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
     setMessage("Only PDF files are allowed.");
     return;
@@ -143,6 +207,14 @@ const handleUpload = async (e: React.FormEvent) => {
       setUploadedDocs({
         document_1: data?.documents?.document_1 || "",
         document_2: data?.documents?.document_2 || "",
+=======
+      const res = await fetch("/api/upload-documents", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+>>>>>>> 0e31287 (Updated Code)
       });
 
       // Store verification status and document URLs in localStorage
@@ -150,8 +222,19 @@ const handleUpload = async (e: React.FormEvent) => {
       localStorage.setItem('document1Url', data?.documents?.document_1 || '');
       localStorage.setItem('document2Url', data?.documents?.document_2 || '');
 
+<<<<<<< HEAD
       setDoc1(null);
       setDoc2(null);
+=======
+      if (res.ok && data.success) {
+        setMessage(data.message || "Documents uploaded successfully.");
+        setStatus(data.status || "pending");
+        setUploadedDocs({
+          document_1: data?.documents?.document_1 || "",
+          document_2: data?.documents?.document_2 || "",
+        });
+        setAdminNote("");
+>>>>>>> 0e31287 (Updated Code)
 
       if (doc1InputRef.current) doc1InputRef.current.value = "";
       if (doc2InputRef.current) doc2InputRef.current.value = "";
@@ -187,8 +270,8 @@ const handleUpload = async (e: React.FormEvent) => {
             <h2>Document Verification</h2>
             <span className={`doc-status-badge status-${status}`}>
               {status === "verified" && "Verified"}
-              {status === "pending" && "Pending"}
-              {status === "failed" && "Failed"}
+              {status === "pending" && "Pending Approval"}
+              {status === "rejected" && "Rejected"}
               {status === "not_uploaded" && "Not Uploaded"}
             </span>
           </div>
@@ -208,7 +291,16 @@ const handleUpload = async (e: React.FormEvent) => {
 
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
+<<<<<<< HEAD
                     <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
+=======
+                    <a
+                      href={uploadedDocs.document_1}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="doc-link"
+                    >
+>>>>>>> 0e31287 (Updated Code)
                       View Uploaded Document 1
                     </a>
                     <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
@@ -231,7 +323,16 @@ const handleUpload = async (e: React.FormEvent) => {
 
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
+<<<<<<< HEAD
                     <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
+=======
+                    <a
+                      href={uploadedDocs.document_2}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="doc-link"
+                    >
+>>>>>>> 0e31287 (Updated Code)
                       View Uploaded Document 2
                     </a>
                     <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
@@ -248,6 +349,16 @@ const handleUpload = async (e: React.FormEvent) => {
           </form>
 
           {message && <p className="doc-message">{message}</p>}
+
+          {status === "pending" && (
+            <p className="doc-message">
+              Your documents have been uploaded and are waiting for admin approval.
+            </p>
+          )}
+
+          {adminNote && status === "rejected" && (
+            <p className="doc-message">Admin Note: {adminNote}</p>
+          )}
         </div>
       </PortalLayout>
       <Footer />

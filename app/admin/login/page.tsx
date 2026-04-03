@@ -2,35 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import "./login.css";
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import "./admin-login.css";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
-
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-  });
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    setIsError(false);
 
     try {
       const res = await fetch(
@@ -40,16 +27,17 @@ export default function LoginPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify({
+            username,
+            password,
+          }),
         }
       );
 
       const data = await res.json();
-      console.log("LOGIN RESPONSE:", data);
 
-      if (!res.ok || !data.token) {
-        setIsError(true);
-        setMessage(data.message || "Login failed");
+      if (!res.ok || !data?.token) {
+        setMessage(data?.message || "Invalid login credentials.");
         return;
       }
 
@@ -66,20 +54,25 @@ export default function LoginPage() {
       const userData = await userRes.json();
 
       if (!userRes.ok) {
-        setIsError(true);
-        setMessage("Unable to verify account.");
+        setMessage("Unable to verify admin account.");
         return;
       }
 
-      localStorage.setItem("wp_user_token", data.token);
-      localStorage.setItem("wp_user_data", JSON.stringify(userData));
-      localStorage.setItem("user_id", String(userData?.id || data?.user_id || ""));
+      const roles: string[] = userData?.roles || [];
+      const isAdmin = roles.includes("administrator");
 
-      router.push("/dashboard");
+      if (!isAdmin) {
+        setMessage("You are not allowed to access admin dashboard.");
+        return;
+      }
+
+      localStorage.setItem("wp_admin_token", data.token);
+      localStorage.setItem("wp_admin_data", JSON.stringify(userData));
+
+      router.push("/admin/dashboard");
     } catch (error) {
-      console.error("User login error:", error);
-      setIsError(true);
-      setMessage("Something went wrong");
+      console.error("Admin login error:", error);
+      setMessage("Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -87,38 +80,36 @@ export default function LoginPage() {
 
   return (
     <>
-      <Header />
+      <Header adminMode={true} />
 
-      <main className="wrapper">
-        <div className="card">
-          <h1 className="title">Login</h1>
-          <p className="subtitle">Access your account</p>
+      <main className="adminLoginPage">
+        <div className="adminLoginCard">
+          <h1>Admin Login</h1>
+          <p>Sign in to access the admin dashboard</p>
 
-          <form onSubmit={handleLogin} className="form">
+          <form onSubmit={handleLogin} className="adminLoginForm">
             <input
               type="text"
-              name="username"
-              placeholder="Username or email"
-              value={form.username}
-              onChange={handleChange}
-              className="input"
+              placeholder="Admin username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="adminLoginInput"
               required
             />
 
-            <div className="passwordField">
+            <div className="adminPasswordField">
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                className="input passwordInput"
+                placeholder="Admin password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="adminLoginInput adminPasswordInput"
                 required
               />
 
               <button
                 type="button"
-                className="passwordToggle"
+                className="adminPasswordToggle"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
@@ -158,24 +149,16 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <button type="submit" className="button" disabled={loading}>
+            <button
+              type="submit"
+              className="adminLoginButton"
+              disabled={loading}
+            >
               {loading ? "Please wait..." : "Login"}
             </button>
           </form>
 
-          {message && (
-            <p
-              className={`message ${isError ? "error" : "success"}`}
-              dangerouslySetInnerHTML={{ __html: message }}
-            />
-          )}
-
-          <p className="bottomText">
-            Don’t have an account?{" "}
-            <a href="/register" className="link">
-              Register
-            </a>
-          </p>
+          {message && <p className="adminLoginMessage">{message}</p>}
         </div>
       </main>
 

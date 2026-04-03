@@ -38,9 +38,8 @@ export default function DashboardPage() {
   const [verificationStatus, setVerificationStatus] = useState("loading");
   const [showVerificationPopup, setShowVerificationPopup] = useState(false);
 
-  // Fetch user data from localStorage and WP API
   useEffect(() => {
-    const token = localStorage.getItem("wp_token");
+    const token = localStorage.getItem("wp_user_token");
 
     if (!token) {
       router.push("/login");
@@ -51,6 +50,7 @@ export default function DashboardPage() {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      cache: "no-store",
     })
       .then((res) => {
         if (!res.ok) {
@@ -63,12 +63,13 @@ export default function DashboardPage() {
           ...data,
           email: data?.email || "",
         };
+
         setUser(finalUser);
-        localStorage.setItem("wp_user", JSON.stringify(finalUser));
+        localStorage.setItem("wp_user_data", JSON.stringify(finalUser));
       })
       .catch(() => {
-        localStorage.removeItem("wp_token");
-        localStorage.removeItem("wp_user");
+        localStorage.removeItem("wp_user_token");
+        localStorage.removeItem("wp_user_data");
         router.push("/login");
       })
       .finally(() => {
@@ -76,7 +77,10 @@ export default function DashboardPage() {
       });
   }, [router]);
 
+<<<<<<< HEAD
   // Fetch verification status from localStorage
+=======
+>>>>>>> 0e31287 (Updated Code)
   useEffect(() => {
     const storedStatus = localStorage.getItem("verificationStatus");
 
@@ -90,7 +94,6 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Fetch products from Chargebee API
   useEffect(() => {
     fetch("/api/chargebee/products", {
       cache: "no-store",

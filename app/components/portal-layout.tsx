@@ -102,7 +102,7 @@ export default function PortalLayout({
   };
 
   const menuItems = [
-    { label: "Profile", href: "/dashboard", icon: <ProfileIcon /> },
+    { label: "Profile", href: "/profile", icon: <ProfileIcon /> },
     { label: "Orders", href: "/order-history", icon: <OrdersIcon /> },
     { label: "Documnent Centre", href: "/document-center", icon: <AddressIcon /> },
     { label: "Payments", href: "/payments", icon: <PaymentIcon /> },
@@ -114,7 +114,10 @@ export default function PortalLayout({
       <div className="portalPageInner">
         <aside className="portalSidebarCard">
           <div className="portalSidebarUser">
-            <div className="portalSidebarAvatar"><ProfileIcon /></div>
+            <div className="portalSidebarAvatar portalSidebarAvatarText">
+              {getInitials(user?.name)}
+            </div>
+
             <div className="portalSidebarUserText">
               <h3>{user?.name || "User"}</h3>
               <p>{user?.email || ""}</p>

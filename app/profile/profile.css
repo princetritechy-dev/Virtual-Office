@@ -1,0 +1,188 @@
+section.portalPageWrap {
+    height: 81vh;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+}
+.portalPageInner{
+    width: 100%;
+}
+.profilePage {
+  padding: 24px;
+}
+
+.profileCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.profileTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+
+.profileTitle {
+  margin: 0 0 6px;
+  font-size: 24px;
+  color: #111827;
+}
+
+.profileSubtext {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.profileForm,
+.passwordBox {
+  margin-top: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.profileField {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileField label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.profileField input {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s ease;
+  background: #fff;
+  color: #111827;
+}
+
+.profileField input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.profileField input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.profileBtn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.profileBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.primaryBtn {
+  background: #2563eb;
+  color: #fff;
+}
+
+.successBtn {
+  background: #16a34a;
+  color: #fff;
+}
+
+.secondaryBtn {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.warningBtn {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.profileBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.profileBtnGroup {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.successMessage,
+.errorMessage {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.successMessage {
+  background: #ecfdf5;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.errorMessage {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.passwordSection {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.fullWidthBtn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+    section.portalPageWrap {
+    height: auto;
+}
+  .profilePage {
+    padding: 0px;
+  }
+
+  .profileCard {
+    padding: 20px;
+  }
+
+  .profileTopRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profileBtnGroup {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .profileBtn {
+    width: 100%;
+  }
+}
