@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -40,9 +39,8 @@ export default function DocumentCenterPage() {
   const doc1InputRef = useRef<HTMLInputElement | null>(null);
   const doc2InputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fetch user data from localStorage and WP API
+  // Fetch user
   useEffect(() => {
-    const token = localStorage.getItem("wp_token");
     const token = localStorage.getItem("wp_user_token");
     const savedUser = localStorage.getItem("wp_user_data");
 
@@ -51,7 +49,6 @@ export default function DocumentCenterPage() {
       return;
     }
 
-    const savedUser = localStorage.getItem("wp_user");
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
@@ -59,7 +56,7 @@ export default function DocumentCenterPage() {
           setUser(parsed);
         }
       } catch (error) {
-        console.error("wp_user_data parse error:", error);
+        console.error("User parse error:", error);
       }
     }
 
@@ -70,9 +67,7 @@ export default function DocumentCenterPage() {
       cache: "no-store",
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Unauthorized");
-        }
+        if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
       .then((data) => {
@@ -88,29 +83,13 @@ export default function DocumentCenterPage() {
         localStorage.removeItem("wp_user_data");
         router.push("/login");
       })
-      .finally(() => {
-        setLoadingUser(false);
-      });
+      .finally(() => setLoadingUser(false));
   }, [router]);
 
-  // Fetch verification status from API and localStorage
+  // Fetch verification status
   useEffect(() => {
-    const storedStatus = localStorage.getItem("verificationStatus");
-    const storedDocument1 = localStorage.getItem("document1Url");
-    const storedDocument2 = localStorage.getItem("document2Url");
+    if (!user?.email) return;
 
-    if (storedStatus) {
-      setStatus(storedStatus);  // Use status from localStorage
-    }
-
-    setUploadedDocs({
-      document_1: storedDocument1 || "",
-      document_2: storedDocument2 || "",
-    });
-  }, []);
-
-const handleUpload = async (e: React.FormEvent) => {
-  e.preventDefault();
     fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
       cache: "no-store",
     })
@@ -132,71 +111,40 @@ const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!user?.email) {
-      setMessage("User not logged in. Please login again.");
+      setMessage("User not logged in.");
       return;
     }
 
     const token = localStorage.getItem("wp_user_token");
 
     if (!token) {
-      setMessage("Authentication token not found. Please login again.");
+      setMessage("Please login again.");
       router.push("/login");
       return;
     }
 
     if (!doc1 || !doc2) {
-      setMessage("Please upload both PDF documents.");
+      setMessage("Upload both documents.");
       return;
     }
 
-    const MAX_FILE_SIZE = 5 * 1024 * 1024;
-    if (doc1.size > MAX_FILE_SIZE || doc2.size > MAX_FILE_SIZE) {
-      setMessage("Files must be less than 5MB.");
+    if (
+      doc1.type !== "application/pdf" ||
+      doc2.type !== "application/pdf"
+    ) {
+      setMessage("Only PDFs allowed.");
       return;
     }
 
-    if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
-      setMessage("Only PDF files are allowed.");
-      return;
-    }
+    setUploading(true);
+    setMessage("");
 
-  if (!user?.email) {
-    setMessage("User not logged in. Please login again.");
-    return;
-  }
+    try {
+      const formData = new FormData();
+      formData.append("user_email", user.email);
+      formData.append("document_1", doc1);
+      formData.append("document_2", doc2);
 
-  if (!doc1 || !doc2) {
-    setMessage("Please upload both PDF documents.");
-    return;
-  }
-
-  if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
-    setMessage("Only PDF files are allowed.");
-    return;
-  }
-
-  setUploading(true);
-  setMessage("");
-
-  try {
-    const formData = new FormData();
-    formData.append("user_email", user.email);
-    formData.append("document_1", doc1);
-    formData.append("document_2", doc2);
-
-    const res = await fetch("/api/upload-documents", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      setMessage(data.message || "Documents uploaded successfully.");
-      setStatus(data.status || "verified");
-      setUploadedDocs({
-        document_1: data?.documents?.document_1 || "",
-        document_2: data?.documents?.document_2 || "",
       const res = await fetch("/api/upload-documents", {
         method: "POST",
         headers: {
@@ -205,16 +153,10 @@ const handleUpload = async (e: React.FormEvent) => {
         body: formData,
       });
 
-      // Store verification status and document URLs in localStorage
-      localStorage.setItem('verificationStatus', data.status || 'verified');
-      localStorage.setItem('document1Url', data?.documents?.document_1 || '');
-      localStorage.setItem('document2Url', data?.documents?.document_2 || '');
-
-      setDoc1(null);
-      setDoc2(null);
+      const data = await res.json();
 
       if (res.ok && data.success) {
-        setMessage(data.message || "Documents uploaded successfully.");
+        setMessage(data.message);
         setStatus(data.status || "pending");
         setUploadedDocs({
           document_1: data?.documents?.document_1 || "",
@@ -222,124 +164,48 @@ const handleUpload = async (e: React.FormEvent) => {
         });
         setAdminNote("");
 
-      if (doc1InputRef.current) doc1InputRef.current.value = "";
-      if (doc2InputRef.current) doc2InputRef.current.value = "";
-    } else {
-      setMessage(data.message || "Upload failed.");
+        localStorage.setItem("verificationStatus", data.status || "pending");
+
+        if (doc1InputRef.current) doc1InputRef.current.value = "";
+        if (doc2InputRef.current) doc2InputRef.current.value = "";
+      } else {
+        setMessage(data.message || "Upload failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Upload error.");
+    } finally {
+      setUploading(false);
     }
-  } catch (error) {
-    console.error("Upload error:", error);
-    setMessage("Something went wrong during upload.");
-  } finally {
-    setUploading(false);
-  }
-};
-
-  const handleReupload1 = () => {
-    if (doc1InputRef.current) doc1InputRef.current.click();
   };
 
-  const handleReupload2 = () => {
-    if (doc2InputRef.current) doc2InputRef.current.click();
-  };
-
-  if (loadingUser) {
-    return <div className="doc-loading">Loading...</div>;
-  }
+  if (loadingUser) return <div>Loading...</div>;
 
   return (
     <main>
       <Header portalMode />
-      <PortalLayout user={user} title="Document Center" subtitle="Upload your PDF documents for verification">
-        <div className="doc-container">
-          <div className="doc-status-row">
-            <h2>Document Verification</h2>
-            <span className={`doc-status-badge status-${status}`}>
-              {status === "verified" && "Verified"}
-              {status === "pending" && "Pending Approval"}
-              {status === "rejected" && "Rejected"}
-              {status === "not_uploaded" && "Not Uploaded"}
-            </span>
-          </div>
+      <PortalLayout user={user} title="Document Center" subtitle="Upload your documents">
+        <form onSubmit={handleUpload}>
+          <input
+            ref={doc1InputRef}
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setDoc1(e.target.files?.[0] || null)}
+          />
 
-          <form onSubmit={handleUpload} className="doc-form">
-            <div className="doc-flex">
-              <div className="doc-box">
-                <p>Upload Document 1 (PDF only)</p>
-                <input
-                  ref={doc1InputRef}
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(e) => setDoc1(e.target.files?.[0] || null)}
-                  required={!uploadedDocs.document_1}
-                />
-                {doc1 && <span className="doc-file-name">{doc1.name}</span>}
+          <input
+            ref={doc2InputRef}
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setDoc2(e.target.files?.[0] || null)}
+          />
 
-                {uploadedDocs.document_1 && (
-                  <div className="uploaded-doc-card">
-                    <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
-                    <a
-                      href={uploadedDocs.document_1}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="doc-link"
-                    >
-                      View Uploaded Document 1
-                    </a>
-                    <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
-                      Re-upload
-                    </button>
-                  </div>
-                )}
-              </div>
+          <button type="submit" disabled={uploading}>
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
+        </form>
 
-              <div className="doc-box">
-                <p>Upload Document 2 (PDF only)</p>
-                <input
-                  ref={doc2InputRef}
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(e) => setDoc2(e.target.files?.[0] || null)}
-                  required={!uploadedDocs.document_2}
-                />
-                {doc2 && <span className="doc-file-name">{doc2.name}</span>}
-
-                {uploadedDocs.document_2 && (
-                  <div className="uploaded-doc-card">
-                    <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
-                    <a
-                      href={uploadedDocs.document_2}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="doc-link"
-                    >
-                      View Uploaded Document 2
-                    </a>
-                    <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
-                      Re-upload
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <button type="submit" disabled={uploading || !user?.email}>
-              {uploading ? "Uploading..." : "Upload Documents"}
-            </button>
-          </form>
-
-          {message && <p className="doc-message">{message}</p>}
-
-          {status === "pending" && (
-            <p className="doc-message">
-              Your documents have been uploaded and are waiting for admin approval.
-            </p>
-          )}
-
-          {adminNote && status === "rejected" && (
-            <p className="doc-message">Admin Note: {adminNote}</p>
-          )}
-        </div>
+        {message && <p>{message}</p>}
       </PortalLayout>
       <Footer />
     </main>
