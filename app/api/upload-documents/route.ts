@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-<<<<<<< HEAD
+
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
 
     // Store files in /tmp directory for Vercel
@@ -44,13 +44,13 @@ export async function POST(req: NextRequest) {
     // Ensure the directory exists
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
-=======
+
     if (document1.size > MAX_FILE_SIZE || document2.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         { success: false, message: "Files must be less than 5MB." },
         { status: 400 }
       );
->>>>>>> 0e31287 (Updated Code)
+
     }
 
     const wpBaseUrl = process.env.NEXT_PUBLIC_WP_API;
@@ -66,10 +66,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-<<<<<<< HEAD
       // Return the relative URL of the file for access
       return `/tmp/documents/${fileName}`;
-=======
     const safeEmail = user_email.replace(/[^a-zA-Z0-9._-]/g, "_");
     const wpApiUrl = `${wpBaseUrl.replace(/\/$/, "")}/wp-json/wp/v2/media`;
 
@@ -108,7 +106,6 @@ export async function POST(req: NextRequest) {
       }
 
       return responseData;
->>>>>>> 0e31287 (Updated Code)
     };
 
     const document1Response = await uploadDocument(
