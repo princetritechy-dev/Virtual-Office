@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-"use client"
-=======
+
 "use client";
 
->>>>>>> 0e31287 (Updated Code)
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/header";
@@ -45,12 +42,9 @@ export default function DocumentCenterPage() {
 
   // Fetch user data from localStorage and WP API
   useEffect(() => {
-<<<<<<< HEAD
     const token = localStorage.getItem("wp_token");
-=======
     const token = localStorage.getItem("wp_user_token");
     const savedUser = localStorage.getItem("wp_user_data");
->>>>>>> 0e31287 (Updated Code)
 
     if (!token) {
       router.push("/login");
@@ -105,7 +99,6 @@ export default function DocumentCenterPage() {
     const storedDocument1 = localStorage.getItem("document1Url");
     const storedDocument2 = localStorage.getItem("document2Url");
 
-<<<<<<< HEAD
     if (storedStatus) {
       setStatus(storedStatus);  // Use status from localStorage
     }
@@ -118,7 +111,6 @@ export default function DocumentCenterPage() {
 
 const handleUpload = async (e: React.FormEvent) => {
   e.preventDefault();
-=======
     fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
       cache: "no-store",
     })
@@ -167,7 +159,6 @@ const handleUpload = async (e: React.FormEvent) => {
       setMessage("Only PDF files are allowed.");
       return;
     }
->>>>>>> 0e31287 (Updated Code)
 
   if (!user?.email) {
     setMessage("User not logged in. Please login again.");
@@ -179,7 +170,6 @@ const handleUpload = async (e: React.FormEvent) => {
     return;
   }
 
-<<<<<<< HEAD
   if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
     setMessage("Only PDF files are allowed.");
     return;
@@ -207,14 +197,12 @@ const handleUpload = async (e: React.FormEvent) => {
       setUploadedDocs({
         document_1: data?.documents?.document_1 || "",
         document_2: data?.documents?.document_2 || "",
-=======
       const res = await fetch("/api/upload-documents", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
->>>>>>> 0e31287 (Updated Code)
       });
 
       // Store verification status and document URLs in localStorage
@@ -222,10 +210,9 @@ const handleUpload = async (e: React.FormEvent) => {
       localStorage.setItem('document1Url', data?.documents?.document_1 || '');
       localStorage.setItem('document2Url', data?.documents?.document_2 || '');
 
-<<<<<<< HEAD
       setDoc1(null);
       setDoc2(null);
-=======
+
       if (res.ok && data.success) {
         setMessage(data.message || "Documents uploaded successfully.");
         setStatus(data.status || "pending");
@@ -234,7 +221,6 @@ const handleUpload = async (e: React.FormEvent) => {
           document_2: data?.documents?.document_2 || "",
         });
         setAdminNote("");
->>>>>>> 0e31287 (Updated Code)
 
       if (doc1InputRef.current) doc1InputRef.current.value = "";
       if (doc2InputRef.current) doc2InputRef.current.value = "";
@@ -291,16 +277,13 @@ const handleUpload = async (e: React.FormEvent) => {
 
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
-<<<<<<< HEAD
                     <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
-=======
                     <a
                       href={uploadedDocs.document_1}
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
                     >
->>>>>>> 0e31287 (Updated Code)
                       View Uploaded Document 1
                     </a>
                     <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
@@ -323,16 +306,13 @@ const handleUpload = async (e: React.FormEvent) => {
 
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
-<<<<<<< HEAD
                     <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
-=======
                     <a
                       href={uploadedDocs.document_2}
                       target="_blank"
                       rel="noreferrer"
                       className="doc-link"
                     >
->>>>>>> 0e31287 (Updated Code)
                       View Uploaded Document 2
                     </a>
                     <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
