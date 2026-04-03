@@ -78,17 +78,27 @@ export default function DashboardPage() {
   }, [router]);
 
   useEffect(() => {
-    const storedStatus = localStorage.getItem("verificationStatus");
+    if (!user?.email) return;
 
-    if (storedStatus) {
-      setVerificationStatus(storedStatus); // Set status from localStorage
-      if (storedStatus === "not_uploaded" || storedStatus === "pending") {
-        setShowVerificationPopup(true); // Show popup if verification is pending or not uploaded
-      } else {
-        setShowVerificationPopup(false);
-      }
-    }
-  }, []);
+    fetch(`/api/get-verification-status?user_email=${encodeURIComponent(user.email)}`, {
+      cache: "no-store",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const status = data?.status || "not_uploaded";
+        setVerificationStatus(status);
+
+        if (status === "not_uploaded" || status === "pending") {
+          setShowVerificationPopup(true);
+        } else {
+          setShowVerificationPopup(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Verification status fetch error:", err);
+        setVerificationStatus("error");
+      });
+  }, [user?.email]);
 
   useEffect(() => {
     fetch("/api/chargebee/products", {
