@@ -39,9 +39,7 @@ export default function DocumentCenterPage() {
   const doc1InputRef = useRef<HTMLInputElement | null>(null);
   const doc2InputRef = useRef<HTMLInputElement | null>(null);
 
-  // =============================
-  // Fetch User
-  // =============================
+  // USER FETCH
   useEffect(() => {
     const token = localStorage.getItem("wp_user_token");
     const savedUser = localStorage.getItem("wp_user_data");
@@ -54,14 +52,18 @@ export default function DocumentCenterPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed?.email) setUser(parsed);
-      } catch (err) {
-        console.error("User parse error:", err);
+        if (parsed?.email) {
+          setUser(parsed);
+        }
+      } catch (error) {
+        console.error("wp_user_data parse error:", error);
       }
     }
 
     fetch(`${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       cache: "no-store",
     })
       .then((res) => {
@@ -69,7 +71,10 @@ export default function DocumentCenterPage() {
         return res.json();
       })
       .then((data) => {
-        const finalUser = { ...data, email: data?.email || "" };
+        const finalUser = {
+          ...data,
+          email: data?.email || "",
+        };
         setUser(finalUser);
         localStorage.setItem("wp_user_data", JSON.stringify(finalUser));
       })
@@ -78,12 +83,33 @@ export default function DocumentCenterPage() {
         localStorage.removeItem("wp_user_data");
         router.push("/login");
       })
-      .finally(() => setLoadingUser(false));
+      .finally(() => {
+        setLoadingUser(false);
+      });
   }, [router]);
 
-  // =============================
-  // Fetch Verification Status
-  // =============================
+  // LOAD STORED VALUES FIRST
+  useEffect(() => {
+    const storedStatus = localStorage.getItem("verificationStatus");
+    const storedDocument1 = localStorage.getItem("document1Url");
+    const storedDocument2 = localStorage.getItem("document2Url");
+    const storedAdminNote = localStorage.getItem("verificationAdminNote");
+
+    if (storedStatus) {
+      setStatus(storedStatus);
+    }
+
+    if (storedAdminNote) {
+      setAdminNote(storedAdminNote);
+    }
+
+    setUploadedDocs({
+      document_1: storedDocument1 || "",
+      document_2: storedDocument2 || "",
+    });
+  }, []);
+
+  // FETCH LATEST STATUS FROM API
   useEffect(() => {
     if (!user?.email) return;
 
@@ -92,32 +118,49 @@ export default function DocumentCenterPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setStatus(data?.status || "not_uploaded");
+        const latestStatus = data?.status || "not_uploaded";
+        const latestAdminNote = data?.admin_note || "";
+        const latestDocument1 =
+          data?.document_1 || data?.documents?.document_1 || "";
+        const latestDocument2 =
+          data?.document_2 || data?.documents?.document_2 || "";
+
+        setStatus(latestStatus);
+        setAdminNote(latestAdminNote);
         setUploadedDocs({
-          document_1: data?.documents?.document_1 || "",
-          document_2: data?.documents?.document_2 || "",
+          document_1: latestDocument1,
+          document_2: latestDocument2,
         });
-        setAdminNote(data?.admin_note || "");
+
+        localStorage.setItem("verificationStatus", latestStatus);
+        localStorage.setItem("document1Url", latestDocument1);
+        localStorage.setItem("document2Url", latestDocument2);
+        localStorage.setItem("verificationAdminNote", latestAdminNote);
       })
-      .catch((err) => console.error("Status fetch error:", err));
+      .catch((error) => {
+        console.error("Verification status fetch error:", error);
+      });
   }, [user?.email]);
 
-  // =============================
-  // Upload Handler
-  // =============================
+  // UPLOAD FUNCTION
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user?.email) {
+      setMessage("User not logged in. Please login again.");
+      return;
+    }
+
     const token = localStorage.getItem("wp_user_token");
 
-    if (!user?.email || !token) {
-      setMessage("Please login again.");
+    if (!token) {
+      setMessage("Authentication token not found. Please login again.");
       router.push("/login");
       return;
     }
 
     if (!doc1 || !doc2) {
-      setMessage("Please upload both documents.");
+      setMessage("Please upload both PDF documents.");
       return;
     }
 
@@ -129,7 +172,7 @@ export default function DocumentCenterPage() {
     }
 
     if (doc1.type !== "application/pdf" || doc2.type !== "application/pdf") {
-      setMessage("Only PDF files allowed.");
+      setMessage("Only PDF files are allowed.");
       return;
     }
 
@@ -144,23 +187,31 @@ export default function DocumentCenterPage() {
 
       const res = await fetch("/api/upload-documents", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
       const data = await res.json();
 
       if (res.ok && data.success) {
+        const newStatus = data.status || "pending";
+        const newDocument1 = data?.documents?.document_1 || "";
+        const newDocument2 = data?.documents?.document_2 || "";
+
+        localStorage.setItem("verificationStatus", newStatus);
+        localStorage.setItem("document1Url", newDocument1);
+        localStorage.setItem("document2Url", newDocument2);
+        localStorage.setItem("verificationAdminNote", "");
+
         setMessage(data.message || "Documents uploaded successfully.");
-        setStatus(data.status || "pending");
+        setStatus(newStatus);
         setUploadedDocs({
-          document_1: data?.documents?.document_1 || "",
-          document_2: data?.documents?.document_2 || "",
+          document_1: newDocument1,
+          document_2: newDocument2,
         });
         setAdminNote("");
-
-        localStorage.setItem("verificationStatus", data.status || "pending");
-
         setDoc1(null);
         setDoc2(null);
 
@@ -169,16 +220,21 @@ export default function DocumentCenterPage() {
       } else {
         setMessage(data.message || "Upload failed.");
       }
-    } catch (err) {
-      console.error("Upload error:", err);
-      setMessage("Upload error.");
+    } catch (error) {
+      console.error("Upload error:", error);
+      setMessage("Something went wrong during upload.");
     } finally {
       setUploading(false);
     }
   };
 
-  const handleReupload1 = () => doc1InputRef.current?.click();
-  const handleReupload2 = () => doc2InputRef.current?.click();
+  const handleReupload1 = () => {
+    doc1InputRef.current?.click();
+  };
+
+  const handleReupload2 = () => {
+    doc2InputRef.current?.click();
+  };
 
   if (loadingUser) {
     return <div className="doc-loading">Loading...</div>;
@@ -187,23 +243,25 @@ export default function DocumentCenterPage() {
   return (
     <main>
       <Header portalMode />
-      <PortalLayout user={user} title="Document Center" subtitle="Upload your PDF documents for verification">
+      <PortalLayout
+        user={user}
+        title="Document Center"
+        subtitle="Upload your PDF documents for verification"
+      >
         <div className="doc-container">
-          
           <div className="doc-status-row">
             <h2>Document Verification</h2>
             <span className={`doc-status-badge status-${status}`}>
-              {status === "verified" && "Verified"}
+              {(status === "verified" || status === "approved") && "Verified"}
               {status === "pending" && "Pending Approval"}
-              {status === "rejected" && "Rejected"}
+              {(status === "rejected" || status === "failed") && "Rejected"}
               {status === "not_uploaded" && "Not Uploaded"}
+              {status === "loading" && "Loading"}
             </span>
           </div>
 
           <form onSubmit={handleUpload} className="doc-form">
             <div className="doc-flex">
-
-              {/* Document 1 */}
               <div className="doc-box">
                 <p>Upload Document 1 (PDF only)</p>
                 <input
@@ -217,17 +275,20 @@ export default function DocumentCenterPage() {
 
                 {uploadedDocs.document_1 && (
                   <div className="uploaded-doc-card">
-                    <a href={uploadedDocs.document_1} target="_blank" rel="noreferrer" className="doc-link">
+                    {/* <a
+                      href={uploadedDocs.document_1}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       View Uploaded Document 1
-                    </a>
-                    <button type="button" className="doc-reupload-btn" onClick={handleReupload1}>
+                    </a> */}
+                    <button type="button" onClick={handleReupload1}>
                       Re-upload
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Document 2 */}
               <div className="doc-box">
                 <p>Upload Document 2 (PDF only)</p>
                 <input
@@ -241,19 +302,22 @@ export default function DocumentCenterPage() {
 
                 {uploadedDocs.document_2 && (
                   <div className="uploaded-doc-card">
-                    <a href={uploadedDocs.document_2} target="_blank" rel="noreferrer" className="doc-link">
+                    {/* <a
+                      href={uploadedDocs.document_2}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       View Uploaded Document 2
-                    </a>
-                    <button type="button" className="doc-reupload-btn" onClick={handleReupload2}>
+                    </a> */}
+                    <button type="button" onClick={handleReupload2}>
                       Re-upload
                     </button>
                   </div>
                 )}
               </div>
-
             </div>
 
-            <button type="submit" disabled={uploading}>
+            <button type="submit" disabled={uploading || !user?.email}>
               {uploading ? "Uploading..." : "Upload Documents"}
             </button>
           </form>
@@ -262,14 +326,13 @@ export default function DocumentCenterPage() {
 
           {status === "pending" && (
             <p className="doc-message">
-              Your documents are uploaded and waiting for admin approval.
+              Your documents have been uploaded and are waiting for admin approval.
             </p>
           )}
 
-          {adminNote && status === "rejected" && (
+          {(status === "rejected" || status === "failed") && adminNote && (
             <p className="doc-message">Admin Note: {adminNote}</p>
           )}
-
         </div>
       </PortalLayout>
       <Footer />
