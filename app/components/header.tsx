@@ -27,8 +27,8 @@ export default function Header({
 
   useEffect(() => {
     const syncAuthState = () => {
-      const token = localStorage.getItem("wp_token");
-      const savedUser = localStorage.getItem("wp_user");
+      const token = localStorage.getItem("wp_user_token");
+      const savedUser = localStorage.getItem("wp_user_data");
 
       let parsedUser: StoredUser | null = null;
 
@@ -41,7 +41,7 @@ export default function Header({
       }
 
       setUser(parsedUser);
-      setIsLoggedIn(!!token || !!parsedUser?.name || !!parsedUser?.email);
+      setIsLoggedIn(!!token && !!parsedUser);
     };
 
     syncAuthState();

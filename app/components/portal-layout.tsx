@@ -40,34 +40,26 @@ const OrdersIcon = () => (
   </svg>
 );
 
-const AddressIcon = () => (
+const DocumentIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <path
-      d="M12 21C12 21 18 15.5 18 10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10C6 15.5 12 21 12 21Z"
+      d="M7 3H14L19 8V21H7V3Z"
       stroke="currentColor"
       strokeWidth="1.8"
+      strokeLinejoin="round"
     />
-    <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.8" />
-  </svg>
-);
-
-const PaymentIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.8" />
-    <path d="M3 10H21" stroke="currentColor" strokeWidth="1.8" />
-  </svg>
-);
-
-const HelpIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
     <path
-      d="M9.75 9.25C9.75 8.00736 10.7574 7 12 7C13.2426 7 14.25 8.00736 14.25 9.25C14.25 10.1163 13.7604 10.8682 13.0429 11.2436C12.4667 11.5451 12 12.0294 12 12.75V13.25"
+      d="M14 3V8H19"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M9 13H15M9 17H13"
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
     />
-    <circle cx="12" cy="16.5" r="1" fill="currentColor" />
   </svg>
 );
 
@@ -104,9 +96,7 @@ export default function PortalLayout({
   const menuItems = [
     { label: "Profile", href: "/profile", icon: <ProfileIcon /> },
     { label: "Orders", href: "/order-history", icon: <OrdersIcon /> },
-    { label: "Documnent Centre", href: "/document-center", icon: <AddressIcon /> },
-    { label: "Payments", href: "/payments", icon: <PaymentIcon /> },
-    { label: "Help", href: "/help", icon: <HelpIcon /> },
+    { label: "Documnent Centre", href: "/document-center", icon: <DocumentIcon /> },
   ];
 
   return (

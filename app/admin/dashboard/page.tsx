@@ -214,41 +214,40 @@ export default function AdminDashboardPage() {
     return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
   };
 
-  const handleViewDocument = async (documentUrl: string) => {
-    try {
-      const token = localStorage.getItem("wp_admin_token");
+const handleViewDocument = async (documentUrl: string) => {
+  try {
+    const token = localStorage.getItem("wp_admin_token");
 
-      if (!token) {
-        alert("Admin token missing. Please login again.");
-        router.push("/admin/login");
-        return;
-      }
-
-      const res = await fetch(
-        `/api/admin/view-document?url=${encodeURIComponent(documentUrl)}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        alert(data?.message || "Failed to open document.");
-        return;
-      }
-
-      const blob = await res.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      window.open(blobUrl, "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("View document failed:", error);
-      alert("Failed to open document.");
+    if (!token) {
+      alert("Admin token missing. Please login again.");
+      router.push("/admin/login");
+      return;
     }
-  };
 
+    const res = await fetch(
+      `/api/admin/view-document?url=${encodeURIComponent(documentUrl)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      alert(data?.message || "Document not found or may have been deleted.");
+      return;
+    }
+
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank", "noopener,noreferrer");
+  } catch (error) {
+    console.error("View document failed:", error);
+    alert("Failed to open document.");
+  }
+};
   const roleLabel =
     adminData?.roles?.length
       ? adminData.roles.map((role) => role.replace(/[-_]/g, " ")).join(", ")

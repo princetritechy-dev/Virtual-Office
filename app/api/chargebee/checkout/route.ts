@@ -9,7 +9,7 @@ const chargebee = new Chargebee({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, item_price_id } = body;
+    const { firstName, lastName, email, item_price_id, quantity } = body;
 
     if (!email || !item_price_id) {
       return NextResponse.json(
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       subscription_items: [
         {
           item_price_id,
+          quantity: quantity || 1,
         },
       ],
       customer: {
@@ -37,8 +38,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      checkout_url: result.hosted_page.url,
-      hosted_page_id: result.hosted_page.id,
+      checkout_url: result?.hosted_page?.url || "",
+      hosted_page_id: result?.hosted_page?.id || "",
     });
   } catch (error: any) {
     console.error("Chargebee checkout error:", error);
