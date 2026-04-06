@@ -59,6 +59,6 @@ export async function POST(req: NextRequest) {
         message: error?.message || "Failed to update verification.",
       },
       { status: 500 }
-    );
+    )
   }
 }
