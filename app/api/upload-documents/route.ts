@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const wpBaseUrl = process.env.NEXT_PUBLIC_WP_API;
+    const adminToken = process.env.WP_ADMIN_JWT;
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,8 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const wpBaseUrl = process.env.NEXT_PUBLIC_WP_API;
-    const adminToken = process.env.WP_ADMIN_JWT;
+    
 
     if (!wpBaseUrl || !adminToken) {
       return NextResponse.json(
@@ -123,9 +125,7 @@ export async function POST(req: NextRequest) {
     const saveDocsData = await saveDocsRes.json();
 
     if (!saveDocsRes.ok || !saveDocsData.success) {
-      throw new Error(
-        saveDocsData?.message || "Failed to save verification documents."
-      );
+      throw new Error(saveDocsData?.message || "Failed to save verification documents.");
     }
 
     return NextResponse.json(
