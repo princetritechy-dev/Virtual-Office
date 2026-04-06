@@ -33,15 +33,6 @@ const DashboardIcon = () => (
   </svg>
 );
 
-const VerificationIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/>
-    <path d="M8 8H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-    <path d="M8 12H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-    <path d="M9 16L11 18L15 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
 const UserDashboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <path
@@ -124,19 +115,17 @@ export default function AdminDashboardPage() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-        const token = localStorage.getItem("wp_admin_token");
+      const token = localStorage.getItem("wp_admin_token");
 
-        const res = await fetch(
-        `/api/admin/users?status=${encodeURIComponent(
-            statusFilter
-        )}&search=${encodeURIComponent(search)}`,
+      const res = await fetch(
+        `/api/admin/users?status=${encodeURIComponent(statusFilter)}&search=${encodeURIComponent(search)}`,
         {
-            headers: {
+          headers: {
             Authorization: `Bearer ${token}`,
-            },
-            cache: "no-store",
+          },
+          cache: "no-store",
         }
-        );
+      );
 
       const data = await res.json();
       const fetchedUsers = data?.users || [];
@@ -175,20 +164,20 @@ export default function AdminDashboardPage() {
     setSavingId(userId);
 
     try {
-        const token = localStorage.getItem("wp_admin_token");
+      const token = localStorage.getItem("wp_admin_token");
 
-        const res = await fetch("/api/admin/update-verification", {
+      const res = await fetch("/api/admin/update-verification", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            user_id: userId,
-            status,
-            admin_note: notes[userId] || "",
+          user_id: userId,
+          status,
+          admin_note: notes[userId] || "",
         }),
-        });
+      });
 
       const data = await res.json();
 
@@ -225,10 +214,44 @@ export default function AdminDashboardPage() {
     return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
   };
 
+  const handleViewDocument = async (documentUrl: string) => {
+    try {
+      const token = localStorage.getItem("wp_admin_token");
+
+      if (!token) {
+        alert("Admin token missing. Please login again.");
+        router.push("/admin/login");
+        return;
+      }
+
+      const res = await fetch(
+        `/api/admin/view-document?url=${encodeURIComponent(documentUrl)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        alert(data?.message || "Failed to open document.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("View document failed:", error);
+      alert("Failed to open document.");
+    }
+  };
+
   const roleLabel =
     adminData?.roles?.length
       ? adminData.roles.map((role) => role.replace(/[-_]/g, " ")).join(", ")
-
       : "administrator";
 
   if (checkingAdmin) {
@@ -254,7 +277,7 @@ export default function AdminDashboardPage() {
 
             <div className="admin-sidebar-menu">
               <a href="/admin/dashboard" className="admin-sidebar-item active">
-               <span className="admin-sidebar-icon"><DashboardIcon /></span>
+                <span className="admin-sidebar-icon"><DashboardIcon /></span>
                 <span>Dashboard</span>
               </a>
 
@@ -296,6 +319,7 @@ export default function AdminDashboardPage() {
                 <p>Rejected</p>
                 <h3>{stats.rejected}</h3>
               </div>
+
               <div className="admin-card">
                 <p>Not Uploaded</p>
                 <h3>{stats.not_uploaded}</h3>
@@ -349,22 +373,23 @@ export default function AdminDashboardPage() {
 
                       <div className="admin-links">
                         {user.documents.document_1 && (
-                          <a
-                            href={user.documents.document_1}
-                            target="_blank"
-                            rel="noreferrer"
+                          <button
+                            type="button"
+                            className="admin-doc-btn"
+                            onClick={() => handleViewDocument(user.documents.document_1)}
                           >
                             View Document 1
-                          </a>
+                          </button>
                         )}
+
                         {user.documents.document_2 && (
-                          <a
-                            href={user.documents.document_2}
-                            target="_blank"
-                            rel="noreferrer"
+                          <button
+                            type="button"
+                            className="admin-doc-btn"
+                            onClick={() => handleViewDocument(user.documents.document_2)}
                           >
                             View Document 2
-                          </a>
+                          </button>
                         )}
                       </div>
                     </div>
@@ -407,6 +432,7 @@ export default function AdminDashboardPage() {
                       >
                         Set Pending
                       </button>
+
                       <button
                         onClick={() => updateStatus(user.id, "not_uploaded")}
                         disabled={savingId === user.id}
