@@ -42,7 +42,7 @@ export default function DashboardPage() {
     const token = localStorage.getItem("wp_user_token");
 
     if (!token) {
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
@@ -70,8 +70,11 @@ export default function DashboardPage() {
       .catch(() => {
         localStorage.removeItem("wp_user_token");
         localStorage.removeItem("wp_user_data");
-        router.push("/login");
-      })
+        localStorage.removeItem("chargebee_cart");
+        sessionStorage.clear();
+        setUser(null);
+        router.replace("/login");
+              })
       .finally(() => {
         setLoading(false);
       });
@@ -124,6 +127,16 @@ export default function DashboardPage() {
         setProductLoading(false);
       });
   }, []);
+
+  const handleLogout = () => {
+  localStorage.removeItem("wp_user_token");
+  localStorage.removeItem("wp_user_data");
+  localStorage.removeItem("chargebee_cart");
+  sessionStorage.clear();
+  setUser(null);
+  router.replace("/login");
+  router.refresh();
+};
 
   const formatPrice = (amount: number, currency: string) => {
     const value = amount / 100;
