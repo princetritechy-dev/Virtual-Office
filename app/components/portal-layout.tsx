@@ -88,8 +88,8 @@ export default function PortalLayout({
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("wp_token");
-    localStorage.removeItem("wp_user");
+    localStorage.removeItem("wp_user_token");
+    localStorage.removeItem("wp_user_data");
     router.push("/login");
   };
 
