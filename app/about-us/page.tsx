@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import "./about.css"; 
+// import "./about.css"; 
 
 export const dynamic = "force-dynamic"; 
 
