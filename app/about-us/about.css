@@ -107,9 +107,8 @@
 
 /* ================= QUALITY + EXPERIENCE ================= */
 .about-page .quality-grid {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 44px;
+  display: flex;
+  gap: 67px;
   align-items: start;
 }
 
