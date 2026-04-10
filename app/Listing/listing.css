@@ -11,7 +11,7 @@
   --shadow2: 0 16px 40px rgba(15,23,42,.12);
 }
 
-.wrap{max-width:var(--max); margin:0 auto; padding:0 22px;margin-bottom: -3px !important;}
+/* .wrap{max-width:var(--max); margin:0 auto; padding:0 22px;margin-bottom: -3px !important;} */
 
 /* HERO */
 .hero{
