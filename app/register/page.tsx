@@ -6,6 +6,9 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import "./register.css";
 
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()[\]{}\-_=+|;:'",.<>\/\\`~]).{8,}$/;
+
 export default function RegisterPage() {
   const router = useRouter();
 
@@ -28,11 +31,22 @@ export default function RegisterPage() {
     }));
   };
 
+  const isStrongPassword = strongPasswordRegex.test(form.password);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
     setIsError(false);
+
+    if (!isStrongPassword) {
+      setIsError(true);
+      setMessage(
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+      );
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch(

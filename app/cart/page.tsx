@@ -114,9 +114,34 @@ export default function CartPage() {
     router.push("/checkout");
   };
 
-  if (loading) {
-    return <div className="cartPage loadingText">Loading...</div>;
-  }
+if (loading) {
+  return (
+    <main className="dashboardLoaderPage">
+      <Header />
+      <div className="dashboardLoaderWrap">
+        <div className="dashboardLoaderCard">
+          <div className="dashboardLoaderTop">
+            <div className="dashboardLoaderLogoMark"></div>
+            <div className="dashboardLoaderLines">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="dashboardLoaderSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <h2>Redirecting to Cart ...</h2>
+          <p>Please wait while we prepare cart for you.</p>
+        </div>
+      </div>
+      <Footer />
+    </main>
+  );
+}
 
   return (
     <main>

@@ -9,6 +9,9 @@ const pool = mysql.createPool({
   database: "your_db_name",
 });
 
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()[\]{}\-_=+|;:'",.<>\/\\`~]).{8,}$/;
+
 export async function POST(req: NextRequest) {
   try {
     const { name, username, email, password } = await req.json();
@@ -16,6 +19,17 @@ export async function POST(req: NextRequest) {
     if (!name || !username || !email || !password) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    if (!strongPasswordRegex.test(password)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+        },
         { status: 400 }
       );
     }
@@ -43,7 +57,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Temporary registration successful. Proceeding to face verification.",
+      message:
+        "Temporary registration successful. Proceeding to face verification.",
       session_id: sessionId,
     });
   } catch (error) {

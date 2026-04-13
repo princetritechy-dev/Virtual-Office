@@ -236,9 +236,34 @@ export default function DocumentCenterPage() {
     doc2InputRef.current?.click();
   };
 
-  if (loadingUser) {
-    return <div className="doc-loading">Loading...</div>;
-  }
+if (loadingUser) {
+  return (
+    <main className="dashboardLoaderPage">
+      <Header />
+      <div className="dashboardLoaderWrap">
+        <div className="dashboardLoaderCard">
+          <div className="dashboardLoaderTop">
+            <div className="dashboardLoaderLogoMark"></div>
+            <div className="dashboardLoaderLines">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="dashboardLoaderSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <h2>Loading your Documents</h2>
+          <p>Please wait while we prepare Document Page.</p>
+        </div>
+      </div>
+      <Footer />
+    </main>
+  );
+}
 
   return (
     <main>

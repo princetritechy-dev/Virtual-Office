@@ -149,9 +149,34 @@ export default function CheckoutPage() {
     initCheckout();
   }, [router]);
 
-  if (loading) {
-    return <div className="checkoutPage loadingText">Loading...</div>;
-  }
+if (loading) {
+  return (
+    <main className="dashboardLoaderPage">
+      <Header />
+      <div className="dashboardLoaderWrap">
+        <div className="dashboardLoaderCard">
+          <div className="dashboardLoaderTop">
+            <div className="dashboardLoaderLogoMark"></div>
+            <div className="dashboardLoaderLines">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="dashboardLoaderSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <h2>Redirecting to Checkout...</h2>
+          <p>Please wait while we prepare checkout.</p>
+        </div>
+      </div>
+      <Footer />
+    </main>
+  );
+}
 
   return (
     <main>

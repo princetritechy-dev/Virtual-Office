@@ -112,3 +112,19 @@
 .passwordToggle:focus {
   outline: none;
 }
+
+.passwordHint {
+  margin-top: -4px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.passwordHint.valid {
+  color: green;
+}
+
+.passwordHint.invalid {
+  color: red;
+}

@@ -170,9 +170,34 @@ export default function DashboardPage() {
     router.push("/cart");
   };
 
-  if (loading) {
-    return <div className="dashboardPage loadingText">Loading...</div>;
-  }
+if (loading) {
+  return (
+    <main className="dashboardLoaderPage">
+      <Header />
+      <div className="dashboardLoaderWrap">
+        <div className="dashboardLoaderCard">
+          <div className="dashboardLoaderTop">
+            <div className="dashboardLoaderLogoMark"></div>
+            <div className="dashboardLoaderLines">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="dashboardLoaderSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <h2>Loading your dashboard</h2>
+          <p>Please wait while we prepare dashboard.</p>
+        </div>
+      </div>
+      <Footer />
+    </main>
+  );
+}
 
   const filteredProducts = products.filter((product) => {
     const unit = product.period_unit?.toLowerCase();

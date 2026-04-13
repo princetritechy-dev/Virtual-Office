@@ -126,9 +126,34 @@ export default function OrderHistoryPage() {
     return new Date(timestamp * 1000).toLocaleDateString();
   };
 
-  if (loading) {
-    return <div className="orderHistoryPage loadingText">Loading...</div>;
-  }
+if (loading) {
+  return (
+    <main className="dashboardLoaderPage">
+      <Header />
+      <div className="dashboardLoaderWrap">
+        <div className="dashboardLoaderCard">
+          <div className="dashboardLoaderTop">
+            <div className="dashboardLoaderLogoMark"></div>
+            <div className="dashboardLoaderLines">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="dashboardLoaderSpinner">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <h2>Loading your order history</h2>
+          <p>Please wait while we prepare your orders history.</p>
+        </div>
+      </div>
+      <Footer />
+    </main>
+  );
+}
 
   return (
     <main className="orderHistoryPage">
