@@ -32,11 +32,14 @@ type ChargebeeOrder = {
 
 export default function OrderHistoryPage() {
   const router = useRouter();
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [orders, setOrders] = useState<ChargebeeOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderLoading, setOrderLoading] = useState(true);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [cancelLoadingId, setCancelLoadingId] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("wp_user_token");
@@ -57,19 +60,27 @@ export default function OrderHistoryPage() {
       console.error("Failed to parse wp_user_data:", err);
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    })
-      .then(async (res) => {
-        if (!res.ok) {
+    const fetchUserAndOrders = async () => {
+      try {
+        setError("");
+        setSuccessMessage("");
+
+        const userRes = await fetch(
+          `${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            cache: "no-store",
+          }
+        );
+
+        if (!userRes.ok) {
           throw new Error("Unauthorized");
         }
-        return res.json();
-      })
-      .then(async (userData) => {
+
+        const userData = await userRes.json();
+
         const finalUser: UserProfile = {
           ...localUser,
           ...userData,
@@ -80,7 +91,7 @@ export default function OrderHistoryPage() {
         localStorage.setItem("wp_user_data", JSON.stringify(finalUser));
 
         if (!finalUser.email) {
-          throw new Error("User email not found.");
+          throw new Error("Email is required.");
         }
 
         const orderRes = await fetch(
@@ -97,15 +108,16 @@ export default function OrderHistoryPage() {
         }
 
         setOrders(Array.isArray(orderData.orders) ? orderData.orders : []);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         console.error("Chargebee order history error:", err);
         setError(err.message || "Failed to load order history.");
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
         setOrderLoading(false);
-      });
+      }
+    };
+
+    fetchUserAndOrders();
   }, [router]);
 
   const formatAmount = (amount: number, currency: string) => {
@@ -126,34 +138,96 @@ export default function OrderHistoryPage() {
     return new Date(timestamp * 1000).toLocaleDateString();
   };
 
-if (loading) {
-  return (
-    <main className="dashboardLoaderPage">
-      <Header />
-      <div className="dashboardLoaderWrap">
-        <div className="dashboardLoaderCard">
-          <div className="dashboardLoaderTop">
-            <div className="dashboardLoaderLogoMark"></div>
-            <div className="dashboardLoaderLines">
+  const handleCancelSubscription = async (
+    subscriptionId: string,
+    cancelOption: "immediately" | "end_of_term" = "end_of_term"
+  ) => {
+    const confirmed = window.confirm(
+      cancelOption === "immediately"
+        ? "Are you sure you want to cancel this subscription immediately?"
+        : "Are you sure you want to cancel this subscription at the end of the billing term?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setCancelLoadingId(subscriptionId);
+      setError("");
+      setSuccessMessage("");
+
+      const res = await fetch("/api/chargebee/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subscription_id: subscriptionId,
+          cancel_option: cancelOption,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to cancel subscription.");
+      }
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.subscription_id === subscriptionId
+            ? {
+                ...order,
+                status:
+                  cancelOption === "immediately"
+                    ? "cancelled"
+                    : "non_renewing",
+              }
+            : order
+        )
+      );
+
+      setSuccessMessage(
+        data.message ||
+          (cancelOption === "immediately"
+            ? "Subscription cancelled successfully."
+            : "Subscription will be cancelled at the end of the billing term.")
+      );
+    } catch (err: any) {
+      console.error("Cancel subscription error:", err);
+      setError(err.message || "Failed to cancel subscription.");
+    } finally {
+      setCancelLoadingId("");
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="dashboardLoaderPage">
+        <Header portalMode />
+        <div className="dashboardLoaderWrap">
+          <div className="dashboardLoaderCard">
+            <div className="dashboardLoaderTop">
+              <div className="dashboardLoaderLogoMark"></div>
+              <div className="dashboardLoaderLines">
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <div className="dashboardLoaderSpinner">
+              <span></span>
               <span></span>
               <span></span>
             </div>
-          </div>
 
-          <div className="dashboardLoaderSpinner">
-            <span></span>
-            <span></span>
-            <span></span>
+            <h2>Loading your order history</h2>
+            <p>Please wait while we prepare your order details.</p>
           </div>
-
-          <h2>Loading your order history</h2>
-          <p>Please wait while we prepare your orders history.</p>
         </div>
-      </div>
-      <Footer />
-    </main>
-  );
-}
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="orderHistoryPage">
@@ -164,6 +238,7 @@ if (loading) {
         title="Orders"
         subtitle={`Welcome ${user?.name || "User"}, here are your orders.`}
       >
+        {successMessage && <p className="successText">{successMessage}</p>}
         {orderLoading && <p className="loadingText">Loading orders...</p>}
         {!orderLoading && error && <p className="errorText">{error}</p>}
         {!orderLoading && !error && orders.length === 0 && (
@@ -212,6 +287,34 @@ if (loading) {
                     <strong>Next Billing:</strong> {formatDate(order.next_billing_at)}
                   </p>
                 </div>
+
+                {!["cancelled", "non_renewing"].includes(order.status) && (
+                  <div className="orderActions">
+                    <button
+                      className="cancelOrderBtn"
+                      onClick={() =>
+                        handleCancelSubscription(order.subscription_id, "end_of_term")
+                      }
+                      disabled={cancelLoadingId === order.subscription_id}
+                    >
+                      {cancelLoadingId === order.subscription_id
+                        ? "Cancelling..."
+                        : "Cancel Later"}
+                    </button>
+
+                    <button
+                      className="cancelOrderBtn dangerBtn"
+                      onClick={() =>
+                        handleCancelSubscription(order.subscription_id, "immediately")
+                      }
+                      disabled={cancelLoadingId === order.subscription_id}
+                    >
+                      {cancelLoadingId === order.subscription_id
+                        ? "Cancelling..."
+                        : "Cancel Now"}
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
