@@ -1,22 +1,21 @@
 .paymentSuccessPage {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top right, rgba(25, 194, 200, 0.1), transparent 24%),
+    radial-gradient(circle at top right, rgba(25, 194, 200, 0.12), transparent 22%),
     linear-gradient(180deg, #f7faff 0%, #eef4fb 100%);
-}
-
-.paymentSuccessSection {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
 }
 
 .paymentSuccessWrap {
   width: 100%;
   max-width: 760px;
-  margin: 0 auto;
 }
 
 .paymentSuccessCard {
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid #dde6f2;
   border-radius: 28px;
   padding: 48px 40px;
@@ -29,13 +28,13 @@
 .successIconWrap {
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .successIcon {
   width: 82px;
   height: 82px;
-  border-radius: 50%;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,11 +80,11 @@
 .successInfoBox {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 14px;
   background: #f8fbff;
   border: 1px solid #e6edf7;
   border-radius: 20px;
-  padding: 8px 18px;
+  padding: 20px;
   margin: 0 auto 30px;
   max-width: 520px;
 }
@@ -93,15 +92,15 @@
 .infoRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   gap: 16px;
   text-align: left;
-  padding: 16px 0;
+  padding-bottom: 12px;
   border-bottom: 1px solid #e9eef6;
 }
 
 .infoRow:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 
 .infoRow span {
@@ -113,7 +112,6 @@
   color: #16213e;
   font-size: 15px;
   font-weight: 700;
-  text-align: right;
 }
 
 .successActions {
@@ -132,9 +130,6 @@
   font-weight: 700;
   text-decoration: none;
   transition: all 0.22s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .primarySuccessBtn {
@@ -162,132 +157,6 @@
   transform: translateY(-1px);
 }
 
-/* Loader styles */
-.dashboardLoaderPage {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
-}
-
-.dashboardLoaderWrap {
-  min-height: calc(100vh - 160px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-.dashboardLoaderCard {
-  width: 100%;
-  max-width: 520px;
-  background: #ffffff;
-  border: 1px solid rgba(31, 59, 115, 0.08);
-  border-radius: 28px;
-  box-shadow: 0 20px 60px rgba(27, 39, 94, 0.08);
-  padding: 42px 32px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.dashboardLoaderCard::before {
-  content: "";
-  position: absolute;
-  top: -120px;
-  right: -120px;
-  width: 240px;
-  height: 240px;
-  background: radial-gradient(circle, rgba(31, 59, 115, 0.1) 0%, rgba(31, 59, 115, 0) 70%);
-}
-
-.dashboardLoaderTop {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.dashboardLoaderLogoMark {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #19c2c8 0%, #10a7b8 100%);
-  box-shadow: 0 0 0 6px rgba(25, 194, 200, 0.12);
-}
-
-.dashboardLoaderLines {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.dashboardLoaderLines span {
-  display: block;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #1f3564 0%, #2f4b84 100%);
-}
-
-.dashboardLoaderLines span:first-child {
-  width: 110px;
-}
-
-.dashboardLoaderLines span:last-child {
-  width: 74px;
-  opacity: 0.7;
-}
-
-.dashboardLoaderSpinner {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.dashboardLoaderSpinner span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #19c2c8;
-  animation: dashboardBounce 1.2s infinite ease-in-out;
-}
-
-.dashboardLoaderSpinner span:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.dashboardLoaderSpinner span:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.dashboardLoaderCard h2 {
-  margin: 0 0 10px;
-  font-size: 30px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #22345f;
-}
-
-.dashboardLoaderCard p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #667085;
-}
-
-@keyframes dashboardBounce {
-  0%,
-  80%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.45;
-  }
-  40% {
-    transform: translateY(-10px);
-    opacity: 1;
-  }
-}
-
 @media (max-width: 767px) {
   .paymentSuccessCard {
     padding: 32px 20px;
@@ -310,12 +179,7 @@
 
   .infoRow {
     flex-direction: column;
-    align-items: flex-start;
     gap: 4px;
-  }
-
-  .infoRow strong {
-    text-align: left;
   }
 
   .successActions {
@@ -325,18 +189,5 @@
   .primarySuccessBtn,
   .secondarySuccessBtn {
     width: 100%;
-  }
-
-  .dashboardLoaderCard {
-    padding: 32px 20px;
-    border-radius: 22px;
-  }
-
-  .dashboardLoaderCard h2 {
-    font-size: 24px;
-  }
-
-  .dashboardLoaderCard p {
-    font-size: 14px;
   }
 }
