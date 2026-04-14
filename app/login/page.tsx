@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import "./login.css";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -170,6 +171,9 @@ export default function LoginPage() {
             />
           )}
 
+          <Link href="/forgot-password" className="forgotPasswordLink">
+              Forgot Password?
+            </Link>
           <p className="bottomText">
             Don’t have an account?{" "}
             <a href="/register" className="link">

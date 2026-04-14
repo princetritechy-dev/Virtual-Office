@@ -112,3 +112,12 @@
 .passwordToggle:focus {
   outline: none;
 }
+
+.forgotPasswordLink {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #1f3564;
+  text-decoration: none;
+  font-weight: 600;
+}

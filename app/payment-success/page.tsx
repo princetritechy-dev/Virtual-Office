@@ -1,8 +1,5 @@
 import Link from "next/link";
 import "./orderSuccess.css";
-import Header from "../components/header";
-import Footer from "../components/footer";
-
 export default function PaymentSuccessPage() {
   return (
     <main className="paymentSuccessPage">
