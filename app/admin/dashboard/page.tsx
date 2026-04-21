@@ -277,7 +277,38 @@ const handleViewDocument = async (documentUrl: string) => {
             <div className="admin-sidebar-menu">
               <a href="/admin/dashboard" className="admin-sidebar-item active">
                 <span className="admin-sidebar-icon"><DashboardIcon /></span>
-                <span>Dashboard</span>
+                <span>KYC Dashboard</span>
+              </a>
+
+              <a href="/admin/customers" className="admin-sidebar-item">
+                <span className="admin-sidebar-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" stroke="currentColor" strokeWidth="1.8" />
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="1.8" />
+                    <path d="M23 21V19C23 17.1362 21.7252 15.5701 20 15.126" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <path d="M16 3.12601C17.7252 3.57005 19 5.13616 19 7C19 8.86384 17.7252 10.43 16 10.874" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <span>Customers</span>
+              </a>
+
+              <a href="/admin/leads" className="admin-sidebar-item">
+                <span className="admin-sidebar-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span>Leads</span>
+              </a>
+
+              <a href="/admin/reports" className="admin-sidebar-item">
+                <span className="admin-sidebar-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 17V10M12 17V7M16 17V13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
+                  </svg>
+                </span>
+                <span>Reports</span>
               </a>
 
               <a href="/login" className="admin-sidebar-item">

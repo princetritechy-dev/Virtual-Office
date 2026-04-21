@@ -1,0 +1,152 @@
+.customerListWrap {
+  width: 100%;
+}
+
+.customerFilterBar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.customerFilterBar input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border: 1px solid #dde0e8;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #334155;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.customerFilterBar input:focus {
+  border-color: #162d59;
+}
+
+.customerFilterBar button {
+  padding: 10px 22px;
+  background: #162d59;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.customerFilterBar button:hover {
+  background: #0d1e3d;
+}
+
+.customerCard {
+  background: #fff;
+  border: 1px solid #e8ebf0;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+
+.customerCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.customerCardTop h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #162d59;
+  margin: 0 0 4px 0;
+}
+
+.customerCardTop p {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.customerMeta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.customerMeta span {
+  font-size: 0.84rem;
+  color: #6b7280;
+}
+
+.customerMeta span strong {
+  color: #334155;
+}
+
+.customerSubList {
+  background: #f8f9fc;
+  border: 1px solid #e8ebf0;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.customerSubList h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #162d59;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.customerSubRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e8ebf0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.customerSubRow:last-child {
+  border-bottom: none;
+}
+
+.customerSubRow span {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.custStatusPill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.custStatusPill.active,
+.custStatusPill.in_trial { background: #ecfdf5; color: #059669; }
+.custStatusPill.cancelled { background: #fef2f2; color: #dc2626; }
+.custStatusPill.non_renewing { background: #fffbeb; color: #d97706; }
+
+.activeBadge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.noSubText {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-style: italic;
+}

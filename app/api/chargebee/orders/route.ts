@@ -39,29 +39,28 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const customer = customerList[0]?.customer;
-    const customerId = customer?.id;
+    // Aggregate subscriptions across ALL matching Chargebee customers
+    // (a user may have multiple customer records from different checkouts)
+    const allOrders: any[] = [];
 
-    if (!customerId) {
-      return NextResponse.json({
-        success: true,
-        orders: [],
+    for (const customerEntry of customerList) {
+      const customer = customerEntry?.customer;
+      const customerId = customer?.id;
+
+      if (!customerId) continue;
+
+      const subscriptionResult = await chargebee.subscription.list({
+        limit: 100,
+        customer_id: {
+          is: customerId,
+        },
       });
-    }
 
-    const subscriptionResult = await chargebee.subscription.list({
-      limit: 100,
-      customer_id: {
-        is: customerId,
-      },
-    });
+      const subscriptionList = Array.isArray(subscriptionResult?.list)
+        ? subscriptionResult.list
+        : [];
 
-    const subscriptionList = Array.isArray(subscriptionResult?.list)
-      ? subscriptionResult.list
-      : [];
-
-    const orders = subscriptionList
-      .map((entry: any) => {
+      for (const entry of subscriptionList) {
         const subscription = entry?.subscription || {};
         const item =
           Array.isArray(entry?.subscription_items) &&
@@ -69,7 +68,7 @@ export async function GET(req: NextRequest) {
             ? entry.subscription_items[0]
             : {};
 
-        return {
+        allOrders.push({
           subscription_id: subscription.id || "",
           customer_id: subscription.customer_id || customerId,
           customer_email: customer?.email || email,
@@ -86,9 +85,13 @@ export async function GET(req: NextRequest) {
             "",
           next_billing_at: subscription?.next_billing_at || null,
           created_at: subscription?.created_at || null,
-        };
-      })
-      .sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+        });
+      }
+    }
+
+    const orders = allOrders.sort(
+      (a, b) => (b.created_at || 0) - (a.created_at || 0)
+    );
 
     return NextResponse.json({
       success: true,

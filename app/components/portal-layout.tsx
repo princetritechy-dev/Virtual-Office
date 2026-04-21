@@ -63,6 +63,23 @@ const DocumentIcon = () => (
   </svg>
 );
 
+const BillingIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M2 10H22" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M6 15H10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
+const DashboardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path d="M3 13H11V3H3V13Z" stroke="currentColor" strokeWidth="1.8"/>
+    <path d="M13 21H21V11H13V21Z" stroke="currentColor" strokeWidth="1.8"/>
+    <path d="M13 3H21V9H13V3Z" stroke="currentColor" strokeWidth="1.8"/>
+    <path d="M3 15H11V21H3V15Z" stroke="currentColor" strokeWidth="1.8"/>
+  </svg>
+);
+
 const LogoutIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <path d="M10 17L15 12L10 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -94,9 +111,11 @@ export default function PortalLayout({
   };
 
   const menuItems = [
+    { label: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
     { label: "Profile", href: "/profile", icon: <ProfileIcon /> },
     { label: "Orders", href: "/order-history", icon: <OrdersIcon /> },
-    { label: "Documnent Centre", href: "/document-center", icon: <DocumentIcon /> },
+    { label: "Billing & Invoices", href: "/billing", icon: <BillingIcon /> },
+    { label: "Document Centre", href: "/document-center", icon: <DocumentIcon /> },
   ];
 
   return (
