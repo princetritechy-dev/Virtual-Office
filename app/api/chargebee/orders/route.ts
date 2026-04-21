@@ -61,11 +61,11 @@ export async function GET(req: NextRequest) {
         : [];
 
       for (const entry of subscriptionList) {
-        const subscription = entry?.subscription || {};
-        const item =
-          Array.isArray(entry?.subscription_items) &&
-          entry.subscription_items.length > 0
-            ? entry.subscription_items[0]
+        const subscription: any = entry?.subscription || {};
+        const item: any =
+          Array.isArray(subscription.subscription_items) &&
+          subscription.subscription_items.length > 0
+            ? subscription.subscription_items[0]
             : {};
 
         allOrders.push({
