@@ -68,8 +68,8 @@ export async function GET(req: NextRequest) {
       if (!subsByCustomer[custId]) subsByCustomer[custId] = [];
 
       const item =
-        Array.isArray(entry?.subscription_items) && entry.subscription_items.length > 0
-          ? entry.subscription_items[0]
+        Array.isArray(entry?.subscription) && entry.subscription.length > 0
+          ? entry.subscription[0]
           : {};
 
       subsByCustomer[custId].push({
