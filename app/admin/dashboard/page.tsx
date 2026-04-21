@@ -254,7 +254,32 @@ const handleViewDocument = async (documentUrl: string) => {
       : "administrator";
 
   if (checkingAdmin) {
-    return <div className="admin-loading">Checking admin access...</div>;
+      return (
+        <main className="dashboardLoaderPage">
+          <Header />
+          <div className="dashboardLoaderWrap">
+            <div className="dashboardLoaderCard">
+              <div className="dashboardLoaderTop">
+                <div className="dashboardLoaderLogoMark"></div>
+                <div className="dashboardLoaderLines">
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+    
+              <div className="dashboardLoaderSpinner">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+    
+              <h2>Loading Admin dashboard</h2>
+              <p>Please wait while we prepare Admin dashboard.</p>
+            </div>
+          </div>
+          <Footer />
+        </main>
+      );
   }
 
   return (

@@ -22,10 +22,17 @@ export default function Header({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<StoredUser | null>(null);
   const [authMenuOpen, setAuthMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const authDropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const syncAuthState = () => {
       const token = localStorage.getItem("wp_user_token");
       const savedUser = localStorage.getItem("wp_user_data");
@@ -53,7 +60,7 @@ export default function Header({
       window.removeEventListener("storage", syncAuthState);
       window.removeEventListener("focus", syncAuthState);
     };
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,6 +83,12 @@ export default function Header({
     setAuthMenuOpen(false);
   };
 
+  // Until hydration finishes, the server and client must render the same tree.
+  // We treat the user as "not logged in" until `mounted` is true, so the auth
+  // slot is rendered identically on both sides. Once mounted, the real auth
+  // state from localStorage takes over.
+  const showLoggedIn = mounted && isLoggedIn;
+
   return (
     <header
       className={`nav ${portalMode ? "portalHeader" : ""} ${
@@ -84,7 +97,9 @@ export default function Header({
     >
       <div className="container navInner">
         <Link
-          href={adminMode ? "/admin/login" : isLoggedIn ? "/dashboard" : "/"}
+          href={
+            adminMode ? "/admin/login" : showLoggedIn ? "/dashboard" : "/"
+          }
           className="brand"
           onClick={closeMenus}
         >
@@ -127,7 +142,7 @@ export default function Header({
             </nav>
 
             <div className="headerAuthLink">
-              {isLoggedIn ? (
+              {showLoggedIn ? (
                 <Link
                   href="/dashboard"
                   className="headerUserSummary"

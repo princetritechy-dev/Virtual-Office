@@ -42,39 +42,73 @@ type AdminData = {
 
 const DashboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M3 13H11V3H3V13Z" stroke="currentColor" strokeWidth="1.8"/>
-    <path d="M13 21H21V11H13V21Z" stroke="currentColor" strokeWidth="1.8"/>
-    <path d="M13 3H21V9H13V3Z" stroke="currentColor" strokeWidth="1.8"/>
-    <path d="M3 15H11V21H3V15Z" stroke="currentColor" strokeWidth="1.8"/>
+    <path d="M3 13H11V3H3V13Z" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M13 21H21V11H13V21Z" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M13 3H21V9H13V3Z" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M3 15H11V21H3V15Z" stroke="currentColor" strokeWidth="1.8" />
   </svg>
 );
 
 const UserDashboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" strokeWidth="1.8" />
-    <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path
+      d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
 const ReportsIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M8 17V10M12 17V7M16 17V13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path
+      d="M8 17V10M12 17V7M16 17V13"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
     <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
   </svg>
 );
 
 const CustomersIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" stroke="currentColor" strokeWidth="1.8" />
+    <path
+      d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
     <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="1.8" />
-    <path d="M23 21V19C23 17.1362 21.7252 15.5701 20 15.126" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M16 3.12601C17.7252 3.57005 19 5.13616 19 7C19 8.86384 17.7252 10.43 16 10.874" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path
+      d="M23 21V19C23 17.1362 21.7252 15.5701 20 15.126"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+    <path
+      d="M16 3.12601C17.7252 3.57005 19 5.13616 19 7C19 8.86384 17.7252 10.43 16 10.874"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
 const LeadsIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M22 12H18L15 21L9 3L6 12H2"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -85,22 +119,40 @@ export default function AdminReportsPage() {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [adminData, setAdminData] = useState<AdminData | null>(null);
   const [exporting, setExporting] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  // Mark component as mounted on the client. Until this flips to true we
+  // render the exact same loader on both server and client to avoid any
+  // hydration mismatch.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const token = localStorage.getItem("wp_admin_token");
     const storedAdmin = localStorage.getItem("wp_admin_data");
 
-    if (!token) { router.push("/admin/login"); return; }
-
-    if (storedAdmin) {
-      try { setAdminData(JSON.parse(storedAdmin)); } catch {}
+    if (!token) {
+      router.push("/admin/login");
+      return;
     }
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`,
-      { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" }
-    )
-      .then((res) => { if (!res.ok) throw new Error(); return res.json(); })
+    if (storedAdmin) {
+      try {
+        setAdminData(JSON.parse(storedAdmin));
+      } catch {}
+    }
+
+    fetch(`${process.env.NEXT_PUBLIC_WP_API}/wp-json/wp/v2/users/me?context=edit`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
       .then((data) => {
         if (!data?.roles?.includes("administrator")) {
           localStorage.removeItem("wp_admin_token");
@@ -115,7 +167,7 @@ export default function AdminReportsPage() {
         localStorage.removeItem("wp_admin_token");
         router.push("/admin/login");
       });
-  }, [router]);
+  }, [router, mounted]);
 
   useEffect(() => {
     if (checkingAdmin) return;
@@ -193,8 +245,37 @@ export default function AdminReportsPage() {
     ? adminData.roles.map((r) => r.replace(/[-_]/g, " ")).join(", ")
     : "administrator";
 
-  if (checkingAdmin) {
-    return <div className="admin-loading">Checking admin access...</div>;
+  // Show the loader while the component hasn't mounted yet OR while we're
+  // still verifying admin credentials. Same markup on server and client.
+  if (!mounted || checkingAdmin) {
+    return (
+      <>
+        <Header />
+        <main className="dashboardLoaderPage">
+          <div className="dashboardLoaderWrap">
+            <div className="dashboardLoaderCard">
+              <div className="dashboardLoaderTop">
+                <div className="dashboardLoaderLogoMark"></div>
+                <div className="dashboardLoaderLines">
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+
+              <div className="dashboardLoaderSpinner">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <h2>Loading Reports dashboard</h2>
+              <p>Please wait while we retrieve Reports</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -213,23 +294,33 @@ export default function AdminReportsPage() {
             </div>
             <div className="admin-sidebar-menu">
               <a href="/admin/dashboard" className="admin-sidebar-item">
-                <span className="admin-sidebar-icon"><DashboardIcon /></span>
+                <span className="admin-sidebar-icon">
+                  <DashboardIcon />
+                </span>
                 <span>KYC Dashboard</span>
               </a>
               <a href="/admin/customers" className="admin-sidebar-item">
-                <span className="admin-sidebar-icon"><CustomersIcon /></span>
+                <span className="admin-sidebar-icon">
+                  <CustomersIcon />
+                </span>
                 <span>Customers</span>
               </a>
               <a href="/admin/leads" className="admin-sidebar-item">
-                <span className="admin-sidebar-icon"><LeadsIcon /></span>
+                <span className="admin-sidebar-icon">
+                  <LeadsIcon />
+                </span>
                 <span>Leads</span>
               </a>
               <a href="/admin/reports" className="admin-sidebar-item active">
-                <span className="admin-sidebar-icon"><ReportsIcon /></span>
+                <span className="admin-sidebar-icon">
+                  <ReportsIcon />
+                </span>
                 <span>Reports</span>
               </a>
               <a href="/login" className="admin-sidebar-item">
-                <span className="admin-sidebar-icon"><UserDashboardIcon /></span>
+                <span className="admin-sidebar-icon">
+                  <UserDashboardIcon />
+                </span>
                 <span>User Dashboard</span>
               </a>
             </div>
@@ -260,14 +351,18 @@ export default function AdminReportsPage() {
                       onClick={() => handleExport("subscriptions")}
                       disabled={!!exporting}
                     >
-                      {exporting === "subscriptions" ? "Exporting..." : "Export Subscriptions CSV"}
+                      {exporting === "subscriptions"
+                        ? "Exporting..."
+                        : "Export Subscriptions CSV"}
                     </button>
                     <button
                       className="exportBtn secondary"
                       onClick={() => handleExport("customers")}
                       disabled={!!exporting}
                     >
-                      {exporting === "customers" ? "Exporting..." : "Export Customers CSV"}
+                      {exporting === "customers"
+                        ? "Exporting..."
+                        : "Export Customers CSV"}
                     </button>
                     <button
                       className="exportBtn secondary"
@@ -283,7 +378,14 @@ export default function AdminReportsPage() {
 
                 {/* Subscription Stats */}
                 <div className="reportSection">
-                  <h2 style={{ fontSize: "1.15rem", fontWeight: 600, color: "#162d59", marginBottom: 16 }}>
+                  <h2
+                    style={{
+                      fontSize: "1.15rem",
+                      fontWeight: 600,
+                      color: "#162d59",
+                      marginBottom: 16,
+                    }}
+                  >
                     Subscription Overview
                   </h2>
                   <div className="reportStatsGrid">
@@ -312,12 +414,14 @@ export default function AdminReportsPage() {
                   {Object.keys(reports.subscriptions.by_plan).length > 0 && (
                     <div className="planBreakdown">
                       <h3>Subscriptions by Plan</h3>
-                      {Object.entries(reports.subscriptions.by_plan).map(([plan, count]) => (
-                        <div key={plan} className="planRow">
-                          <span>{plan}</span>
-                          <span>{count}</span>
-                        </div>
-                      ))}
+                      {Object.entries(reports.subscriptions.by_plan).map(
+                        ([plan, count]) => (
+                          <div key={plan} className="planRow">
+                            <span>{plan}</span>
+                            <span>{count}</span>
+                          </div>
+                        )
+                      )}
                     </div>
                   )}
                 </div>
@@ -326,7 +430,14 @@ export default function AdminReportsPage() {
 
                 {/* Verification Stats */}
                 <div className="reportSection">
-                  <h2 style={{ fontSize: "1.15rem", fontWeight: 600, color: "#162d59", marginBottom: 16 }}>
+                  <h2
+                    style={{
+                      fontSize: "1.15rem",
+                      fontWeight: 600,
+                      color: "#162d59",
+                      marginBottom: 16,
+                    }}
+                  >
                     User Verification
                   </h2>
                   <div className="reportStatsGrid">
@@ -358,7 +469,14 @@ export default function AdminReportsPage() {
                   <>
                     <div className="reportDivider" />
                     <div className="reportSection">
-                      <h2 style={{ fontSize: "1.15rem", fontWeight: 600, color: "#162d59", marginBottom: 16 }}>
+                      <h2
+                        style={{
+                          fontSize: "1.15rem",
+                          fontWeight: 600,
+                          color: "#162d59",
+                          marginBottom: 16,
+                        }}
+                      >
                         Recent Subscriptions
                       </h2>
                       <div style={{ overflowX: "auto" }}>
