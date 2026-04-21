@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       totalSubscriptions = subList.length;
 
       for (const entry of subList) {
-        const sub = entry?.subscription || {};
+        const sub: any = entry?.subscription || {};
         const status = sub.status || "";
 
         if (status === "active" || status === "in_trial") {
@@ -68,7 +68,10 @@ export async function GET(req: NextRequest) {
           cancelledSubscriptions++;
         }
 
-        const planId = sub.plan_id || entry?.subscription_items?.[0]?.item_price_id || "Unknown";
+        const planId =
+          sub.plan_id ||
+          sub.subscription_items?.[0]?.item_price_id ||
+          "Unknown";
         subscriptionsByPlan[planId] = (subscriptionsByPlan[planId] || 0) + 1;
 
         if (recentSubscriptions.length < 10) {

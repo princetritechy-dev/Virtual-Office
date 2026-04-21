@@ -180,6 +180,8 @@
   font-size: 0.74rem;
   font-weight: 600;
   text-transform: capitalize;
+  top: 0px !important;
+  bottom: 0px !important;
 }
 
 .statusPill.active,

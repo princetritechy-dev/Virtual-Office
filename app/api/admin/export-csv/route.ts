@@ -19,6 +19,14 @@ function formatDate(timestamp?: number | null): string {
   return new Date(timestamp * 1000).toISOString().split("T")[0];
 }
 
+interface SubscriptionItem {
+  unit_price?: number;
+  item_price_id?: string;
+  billing_period?: number;
+  billing_period_unit?: string;
+  [key: string]: any;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const wpBaseUrl = process.env.NEXT_PUBLIC_WP_API;
@@ -69,45 +77,51 @@ export async function GET(req: NextRequest) {
         "Subscription ID,Customer ID,Status,Plan,Amount (pence),Currency,Billing Period,Created Date,Next Billing\n";
 
       for (const entry of subList) {
-        const sub = entry?.subscription || {};
-        const item =
-          Array.isArray(entry?.subscription_items) && entry.subscription_items.length > 0
-            ? entry.subscription_items[0]
+        const sub: any = entry?.subscription || {};
+        const item: SubscriptionItem =
+          Array.isArray(sub.subscription_items) && sub.subscription_items.length > 0
+            ? sub.subscription_items[0]
             : {};
 
-        csvContent += [
-          escapeCsv(sub.id),
-          escapeCsv(sub.customer_id),
-          escapeCsv(sub.status),
-          escapeCsv(item?.item_price_id || sub.plan_id || ""),
-          escapeCsv(item?.unit_price ?? sub.mrr ?? 0),
-          escapeCsv(sub.currency_code || "GBP"),
-          escapeCsv(
-            `${item?.billing_period || sub.billing_period || ""} ${item?.billing_period_unit || sub.billing_period_unit || ""}`
-          ),
-          escapeCsv(formatDate(sub.created_at)),
-          escapeCsv(formatDate(sub.next_billing_at)),
-        ].join(",") + "\n";
+        csvContent +=
+          [
+            escapeCsv(sub.id),
+            escapeCsv(sub.customer_id),
+            escapeCsv(sub.status),
+            escapeCsv(item?.item_price_id || sub.plan_id || ""),
+            escapeCsv(item?.unit_price ?? sub.mrr ?? 0),
+            escapeCsv(sub.currency_code || "GBP"),
+            escapeCsv(
+              `${item?.billing_period || sub.billing_period || ""} ${
+                item?.billing_period_unit || sub.billing_period_unit || ""
+              }`
+            ),
+            escapeCsv(formatDate(sub.created_at)),
+            escapeCsv(formatDate(sub.next_billing_at)),
+          ].join(",") + "\n";
       }
     } else if (type === "customers") {
       const custResult = await chargebee.customer.list({ limit: 100 });
       const custList = Array.isArray(custResult?.list) ? custResult.list : [];
 
-      csvContent = "Customer ID,Email,First Name,Last Name,Company,Created Date\n";
+      csvContent =
+        "Customer ID,Email,First Name,Last Name,Company,Created Date\n";
 
       for (const entry of custList) {
-        const cust = entry?.customer || {};
+        const cust: any = entry?.customer || {};
 
-        csvContent += [
-          escapeCsv(cust.id),
-          escapeCsv(cust.email),
-          escapeCsv(cust.first_name),
-          escapeCsv(cust.last_name),
-          escapeCsv(cust.company),
-          escapeCsv(formatDate(cust.created_at)),
-        ].join(",") + "\n";
+        csvContent +=
+          [
+            escapeCsv(cust.id),
+            escapeCsv(cust.email),
+            escapeCsv(cust.first_name),
+            escapeCsv(cust.last_name),
+            escapeCsv(cust.company),
+            escapeCsv(formatDate(cust.created_at)),
+          ].join(",") + "\n";
       }
     } else if (type === "users") {
+      // Export WordPress users + verification status
       const usersRes = await fetch(
         `${wpBaseUrl.replace(/\/$/, "")}/wp-json/custom/v1/admin/users-verification?status=`,
         {
@@ -116,19 +130,30 @@ export async function GET(req: NextRequest) {
         }
       );
 
-      const usersData = usersRes.ok ? await usersRes.json() : {};
-      const users = usersData?.users || [];
+      if (!usersRes.ok) {
+        return NextResponse.json(
+          { success: false, message: "Failed to fetch users from WordPress." },
+          { status: 502 }
+        );
+      }
 
-      csvContent = "User ID,Name,Email,Verification Status,Admin Note\n";
+      const usersData = await usersRes.json();
+      const users = Array.isArray(usersData?.users) ? usersData.users : [];
+
+      csvContent =
+        "User ID,Username,Email,First Name,Last Name,Verification Status,Registered Date\n";
 
       for (const u of users) {
-        csvContent += [
-          escapeCsv(u.id),
-          escapeCsv(u.name),
-          escapeCsv(u.email),
-          escapeCsv(u.status),
-          escapeCsv(u.admin_note),
-        ].join(",") + "\n";
+        csvContent +=
+          [
+            escapeCsv(u.id ?? u.ID ?? ""),
+            escapeCsv(u.username ?? u.user_login ?? ""),
+            escapeCsv(u.email ?? u.user_email ?? ""),
+            escapeCsv(u.first_name ?? ""),
+            escapeCsv(u.last_name ?? ""),
+            escapeCsv(u.status ?? "not_uploaded"),
+            escapeCsv(u.registered ?? u.user_registered ?? ""),
+          ].join(",") + "\n";
       }
     } else {
       return NextResponse.json(
