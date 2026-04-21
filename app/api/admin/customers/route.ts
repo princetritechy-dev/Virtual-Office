@@ -67,20 +67,20 @@ export async function GET(req: NextRequest) {
       if (!custId) continue;
       if (!subsByCustomer[custId]) subsByCustomer[custId] = [];
 
-      const item =
-        Array.isArray(entry?.subscription) && entry.subscription.length > 0
-          ? entry.subscription[0]
-          : {};
+        if (!sub) continue;
 
-      subsByCustomer[custId].push({
-        id: sub.id,
-        status: sub.status,
-        plan: item?.item_price_id || sub.plan_id || "",
-        amount: item?.unit_price ?? sub.mrr ?? 0,
-        currency_code: sub.currency_code || "GBP",
-        created_at: sub.created_at,
-        next_billing_at: sub.next_billing_at,
-      });
+        const items = sub.subscription_items;
+        const item = Array.isArray(items) ? items[0] : undefined;
+
+        subsByCustomer[custId].push({
+          id: sub.id,
+          status: sub.status,
+          plan: item?.item_price_id || sub.plan_id || "",
+          amount: item?.unit_price ?? sub.mrr ?? 0,
+          currency_code: sub.currency_code || "GBP",
+          created_at: sub.created_at,
+          next_billing_at: sub.next_billing_at,
+        });
     }
 
     const customers = custList.map((entry: any) => {
