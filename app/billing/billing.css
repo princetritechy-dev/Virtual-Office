@@ -1,0 +1,201 @@
+.billingPage {
+  width: 100%;
+}
+
+.billingTopBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.billingTopBar h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #162d59;
+  margin: 0;
+}
+
+.manageBtn {
+  padding: 10px 22px;
+  background: #162d59;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.manageBtn:hover {
+  background: #0d1e3d;
+}
+
+.manageBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Summary Cards */
+.billingSummaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.billingSummaryCard {
+  background: #f8f9fc;
+  border: 1px solid #e8ebf0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.billingSummaryCard p {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin: 0 0 6px 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.billingSummaryCard h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #162d59;
+  margin: 0;
+}
+
+/* Invoice Table */
+.invoiceTableWrap {
+  overflow-x: auto;
+  border: 1px solid #e8ebf0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.invoiceTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.invoiceTable thead {
+  background: #f8f9fc;
+}
+
+.invoiceTable th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #e8ebf0;
+}
+
+.invoiceTable td {
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  color: #334155;
+  border-bottom: 1px solid #f1f3f8;
+  vertical-align: middle;
+}
+
+.invoiceTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.invoiceTable tbody tr:hover {
+  background: #fafbfe;
+}
+
+/* Status badges */
+.invoiceStatus {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.invoiceStatus.paid {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.invoiceStatus.open {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.invoiceStatus.draft {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.invoiceStatus.void {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.invoiceStatus.uncollectible {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Action links */
+.invoiceActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.invoiceActions a,
+.invoiceActions button {
+  font-size: 0.82rem;
+  color: #162d59;
+  text-decoration: none;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.invoiceActions a:hover,
+.invoiceActions button:hover {
+  color: #008e97;
+  text-decoration: underline;
+}
+
+.loadingText,
+.errorText,
+.emptyText {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.errorText {
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .billingTopBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .billingSummaryCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

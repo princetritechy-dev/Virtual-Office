@@ -1,0 +1,193 @@
+.paymentSuccessPage {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(25, 194, 200, 0.12), transparent 22%),
+    linear-gradient(180deg, #f7faff 0%, #eef4fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.paymentSuccessWrap {
+  width: 100%;
+  max-width: 760px;
+}
+
+.paymentSuccessCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #dde6f2;
+  border-radius: 28px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.07),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.successIconWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.successIcon {
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #19c2c8 0%, #11a7b7 100%);
+  color: #ffffff;
+  font-size: 38px;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(25, 194, 200, 0.25);
+}
+
+.successBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #e8faf6;
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 18px;
+}
+
+.successTitle {
+  margin: 0 0 14px;
+  font-size: 42px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #16213e;
+}
+
+.successText {
+  margin: 0 auto 28px;
+  max-width: 560px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #667085;
+}
+
+.successInfoBox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #f8fbff;
+  border: 1px solid #e6edf7;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 auto 30px;
+  max-width: 520px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e9eef6;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.infoRow span {
+  color: #667085;
+  font-size: 15px;
+}
+
+.infoRow strong {
+  color: #16213e;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.successActions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.primarySuccessBtn,
+.secondarySuccessBtn {
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.22s ease;
+}
+
+.primarySuccessBtn {
+  background: #1f3564;
+  color: #ffffff;
+  border: 1px solid #1f3564;
+  box-shadow: 0 10px 20px rgba(31, 53, 100, 0.18);
+}
+
+.primarySuccessBtn:hover {
+  background: #16284d;
+  border-color: #16284d;
+  transform: translateY(-1px);
+}
+
+.secondarySuccessBtn {
+  background: #ffffff;
+  color: #1f3564;
+  border: 1px solid #d8e0ed;
+}
+
+.secondarySuccessBtn:hover {
+  background: #f8fbff;
+  border-color: #c8d4e6;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 767px) {
+  .paymentSuccessCard {
+    padding: 32px 20px;
+    border-radius: 22px;
+  }
+
+  .successIcon {
+    width: 70px;
+    height: 70px;
+    font-size: 32px;
+  }
+
+  .successTitle {
+    font-size: 30px;
+  }
+
+  .successText {
+    font-size: 15px;
+  }
+
+  .infoRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .successActions {
+    flex-direction: column;
+  }
+
+  .primarySuccessBtn,
+  .secondarySuccessBtn {
+    width: 100%;
+  }
+}

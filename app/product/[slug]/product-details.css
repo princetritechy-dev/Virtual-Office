@@ -1,0 +1,249 @@
+.productPage {
+  min-height: 100vh;
+  background: #f6f8fc;
+  display: flex;
+  flex-direction: column;
+}
+
+.productContainer {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 70px;
+  flex: 1;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  margin-bottom: 24px;
+  border: 1px solid #d9e0ea;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #1d2433;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.backButton:hover {
+  background: #f8fafc;
+  border-color: #cfd8e3;
+}
+
+.productLayout {
+  display: flex;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+.productImageWrap {
+  width: 48%;
+  flex-shrink: 0;
+}
+
+.productMainImage {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+  background: #eef2f7;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.05);
+}
+
+.productNoImage {
+  width: 100%;
+  height: 520px;
+  border-radius: 20px;
+  background: #eef2f7;
+  border: 1px solid #e6ebf2;
+  color: #7b8798;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.productContent {
+  flex: 1;
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.04);
+}
+
+.productTitle {
+  margin: 0 0 16px;
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #1c1f27;
+  letter-spacing: -0.02em;
+}
+
+.productPrice {
+  margin: 0 0 22px;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  color: #111827;
+}
+
+.productShortDescription,
+.productDescription {
+  color: #4b5563;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.productShortDescription {
+  margin-bottom: 18px;
+}
+
+.productDescription {
+  margin-bottom: 28px;
+}
+
+.productShortDescription p,
+.productDescription p {
+  margin: 0 0 14px;
+}
+
+.productShortDescription ul,
+.productDescription ul,
+.productShortDescription ol,
+.productDescription ol {
+  padding-left: 20px;
+  margin: 0 0 16px;
+}
+
+.productActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.primaryButton {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: #1d4ed8;
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  border: 1px solid #d9e0ea;
+  background: #ffffff;
+  color: #1d2433;
+}
+
+.secondaryButton:hover {
+  background: #f8fafc;
+}
+
+.productStateText {
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.productMessageCard {
+  max-width: 560px;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 28px rgba(16, 24, 40, 0.04);
+}
+
+.productMessageTitle {
+  margin: 0 0 14px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1c1f27;
+}
+
+.productErrorText {
+  margin: 0 0 18px;
+  color: #dc2626;
+  font-size: 16px;
+}
+
+@media (max-width: 991px) {
+  .productLayout {
+    flex-direction: column;
+  }
+
+  .productImageWrap {
+    width: 100%;
+  }
+
+  .productMainImage,
+  .productNoImage {
+    height: 420px;
+  }
+}
+
+@media (max-width: 767px) {
+  .productContainer {
+    width: calc(100% - 24px);
+    padding: 28px 0 50px;
+  }
+
+  .productContent {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .productTitle {
+    font-size: 30px;
+  }
+
+  .productPrice {
+    font-size: 26px;
+  }
+
+  .productMainImage,
+  .productNoImage {
+    height: 300px;
+    border-radius: 16px;
+  }
+
+  .productActions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}
