@@ -16,12 +16,12 @@ export async function GET(req: NextRequest) {
     const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
     const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
-    console.log("WP:", wpBaseUrl ? "FOUND" : "MISSING");
-    console.log("Admin token:", adminToken ? "FOUND" : "MISSING");
-    console.log("AWS_REGION:", region);
-    console.log("AWS_BUCKET:", bucketName);
-    console.log("AWS_KEY:", accessKeyId ? "FOUND" : "MISSING");
-    console.log("AWS_SECRET:", secretAccessKey ? "FOUND" : "MISSING");
+    // console.log("WP:", wpBaseUrl ? "FOUND" : "MISSING");
+    // console.log("Admin token:", adminToken ? "FOUND" : "MISSING");
+    // console.log("AWS_REGION:", region);
+    // console.log("AWS_BUCKET:", bucketName);
+    // console.log("AWS_KEY:", accessKeyId ? "FOUND" : "MISSING");
+    // console.log("AWS_SECRET:", secretAccessKey ? "FOUND" : "MISSING");
 
     if (!wpBaseUrl || !adminToken) {
       return NextResponse.json(
