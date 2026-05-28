@@ -22,15 +22,15 @@ type DifferenceContent = {
 };
 
 type WPPage = {
-      first_difference_content?: {
-      difference_content: ContentBox[];
-    };
-    second_difference_content?: {
-      difference_content: ContentBox[];
-    };
-    third_difference_content?: {
-      difference_content: ContentBox[];
-    }
+  first_difference_content?: {
+    difference_content: ContentBox[];
+  };
+  second_difference_content?: {
+    difference_content: ContentBox[];
+  };
+  third_difference_content?: {
+    difference_content: ContentBox[];
+  }
 };
 
 async function getMediaById(id: number) {
@@ -70,7 +70,7 @@ export default async function HomePage() {
     acfKeys: page?.acf ? Object.keys(page.acf) : [],
   });
 
-  console.log(page?.acf?.benefits_section); 
+  console.log(page?.acf?.benefits_section);
 
   const h1 = page?.acf?.banner?.main_heading;
   const subheading = page?.acf?.banner?.sub_heading;
@@ -86,58 +86,58 @@ export default async function HomePage() {
 
 
 
-const whySection = page?.acf?.why_section || {};
+  const whySection = page?.acf?.why_section || {};
 
-const whyHeading = whySection?.why_heading || "";
-const whySubHeading = whySection?.why_sub_heading || "";
-const whyP1 = whySection?.why_paragraph_one || "";
-const whyP2 = whySection?.why_paragraph_two || "";
+  const whyHeading = whySection?.why_heading || "";
+  const whySubHeading = whySection?.why_sub_heading || "";
+  const whyP1 = whySection?.why_paragraph_one || "";
+  const whyP2 = whySection?.why_paragraph_two || "";
 
-let whyImage1 = null;
-let whyImage2 = null;
+  let whyImage1 = null;
+  let whyImage2 = null;
 
-if (whySection?.why_image_first) {
-  whyImage1 = await getMediaById(whySection.why_image_first);
-}
+  if (whySection?.why_image_first) {
+    whyImage1 = await getMediaById(whySection.why_image_first);
+  }
 
-if (whySection?.why_image_second) {
-  whyImage2 = await getMediaById(whySection.why_image_second);
-}
+  if (whySection?.why_image_second) {
+    whyImage2 = await getMediaById(whySection.why_image_second);
+  }
 
-const benefits = page?.acf?.benefits_section ?? [];
-
-
-
-const receiveItems = Array.isArray(page?.acf?.what_you_recieve_section)
-  ? page.acf.what_you_recieve_section
-  : [];
-const receiveIcons = await Promise.all(
-  receiveItems.map(async (item: any) => {
-    const id = item?.icon_image;
-    if (!id) return null;
-    return await getMediaById(id);
-  })
-);
-
-const howSteps = Array.isArray(page?.acf?.how_it_work_section)
-  ? page.acf.how_it_work_section
-  : [];
+  const benefits = page?.acf?.benefits_section ?? [];
 
 
 
-const platformItems = Array.isArray(page?.acf?.platform_features_section)
-  ? page.acf.platform_features_section
-  : [];
+  const receiveItems = Array.isArray(page?.acf?.what_you_recieve_section)
+    ? page.acf.what_you_recieve_section
+    : [];
+  const receiveIcons = await Promise.all(
+    receiveItems.map(async (item: any) => {
+      const id = item?.icon_image;
+      if (!id) return null;
+      return await getMediaById(id);
+    })
+  );
 
-const platformIcons = await Promise.all(
-  platformItems.map(async (item: any) => {
-    const id = item?.icon_image;
-    if (!id) return null;
-    return await getMediaById(id);
-  })
-);
+  const howSteps = Array.isArray(page?.acf?.how_it_work_section)
+    ? page.acf.how_it_work_section
+    : [];
 
-  
+
+
+  const platformItems = Array.isArray(page?.acf?.platform_features_section)
+    ? page.acf.platform_features_section
+    : [];
+
+  const platformIcons = await Promise.all(
+    platformItems.map(async (item: any) => {
+      const id = item?.icon_image;
+      if (!id) return null;
+      return await getMediaById(id);
+    })
+  );
+
+
   function decodeHtmlEntities(h1: any): import("react").ReactNode {
     throw new Error("Function not implemented.");
   }
@@ -163,46 +163,46 @@ const platformIcons = await Promise.all(
             </div>
 
             <h1
-                className="h1"
-                dangerouslySetInnerHTML={{
-                  __html: h1 || "",
-                }}
-              />
+              className="h1"
+              dangerouslySetInnerHTML={{
+                __html: h1 || "",
+              }}
+            />
 
 
             <p className="lead">
               {hero_para}
             </p>
 
-          <div className="heroCtas">
-            {heroButtons.map((btn: any, index: number) => {
-              let link = "#";
+            <div className="heroCtas">
+              {heroButtons.map((btn: any, index: number) => {
+                let link = "#";
 
-              // First button → Register
-              if (index === 0) {
-                link = "/register";
-              }
+                // First button → Register
+                if (index === 0) {
+                  link = "/register";
+                }
 
-              // Second button → Login or Dashboard
-              if (index === 1) {
-                const isLoggedIn =
-                  typeof window !== "undefined" &&
-                  localStorage.getItem("wp_user_token");
+                // Second button → Login or Dashboard
+                if (index === 1) {
+                  const isLoggedIn =
+                    typeof window !== "undefined" &&
+                    localStorage.getItem("wp_user_token");
 
-                link = isLoggedIn ? "/dashboard" : "/login";
-              }
+                  link = isLoggedIn ? "/dashboard" : "/login";
+                }
 
-              return (
-                <a
-                  key={index}
-                  href={link}
-                  className={`btn ${index === 0 ? "btnPrimary" : "btnGhost"}`}
-                >
-                  {btn?.button_text}
-                </a>
-              );
-            })}
-          </div>
+                return (
+                  <a
+                    key={index}
+                    href={link}
+                    className={`btn ${index === 0 ? "btnPrimary" : "btnGhost"}`}
+                  >
+                    {btn?.button_text}
+                  </a>
+                );
+              })}
+            </div>
             <div className="heroNote">
               <p>
                 {hero_note}
@@ -215,13 +215,13 @@ const platformIcons = await Promise.all(
               <div className="collage">
                 <div className="collageTop">
                   <div className="imgWrap">
-                  <Image
-                    src={heroImage?.src}
-                    alt={heroImage?.alt}
-                    fill
-                    className="collageImg"
-                   
-                  />
+                    <Image
+                      src={heroImage?.src}
+                      alt={heroImage?.alt}
+                      fill
+                      className="collageImg"
+
+                    />
                   </div>
                 </div>
               </div>
@@ -245,11 +245,11 @@ const platformIcons = await Promise.all(
             <div className="whyCard whyCardTall">
               <div className="imgWrap">
                 <Image
-                src={whyImage1?.src || ""}
-                alt={whyImage1?.alt || ""}
-                fill
-                className="whyImg"
-              />
+                  src={whyImage1?.src || ""}
+                  alt={whyImage1?.alt || ""}
+                  fill
+                  className="whyImg"
+                />
               </div>
             </div>
 
@@ -285,227 +285,227 @@ const platformIcons = await Promise.all(
                   <li key={i}>{item.benefit_content}</li>
                 ) : null
               )}
-            </ul>            
+            </ul>
           </div>
         </div>
       </section>
 
       {/* ================= WHAT YOU RECEIVE ================= */}
       <section className="section">
-  <div className="container">
-    <div className="centerTitle">
-      <h2 className="h2">What You Receive</h2>
-      <div className="titleUnderline" aria-hidden="true" />
-    </div>
+        <div className="container">
+          <div className="centerTitle">
+            <h2 className="h2">What You Receive</h2>
+            <div className="titleUnderline" aria-hidden="true" />
+          </div>
 
-    <div className="cardsGrid">
-      {receiveItems.map((item: any, idx: number) => {
-        const icon = receiveIcons[idx];
+          <div className="cardsGrid">
+            {receiveItems.map((item: any, idx: number) => {
+              const icon = receiveIcons[idx];
 
-        return (
-          <FeatureCard
-            key={idx}
-            icon={
-              <Image
-                src={icon?.src }
-                alt={icon?.alt || ""}
-                width={40}
-                height={40}
-              />
-            }
-            title={item?.title || ""}
-            q2={item?.question || ""}
-            desc={item?.description || ""}
-            note={item?.note || ""}
-            noteText={item?.note_text || ""}
-          />
-        );
-      })}
-    </div>
-  </div>
-</section>
-
-  <section className="business-address">
-  <div className="container">
-    <div className="left">
-      <p  className="feature-location">Featured Location</p>
-      <h2>Pick Your Perfect Business Address</h2>
-      <p>Choose a professional location that supports the image you want for your business. Our Mayfair address is known for its reputation, stability, and high-quality surroundings.</p>
-      <div className="mayfair"> 
-        <div className="mygairimage"> 
-          <Image
-  src="/images/location.png"
-  alt="Map icon"
-  width={24}
-  height={24}
-  className="checkIcon"
-/>
-
-
+              return (
+                <FeatureCard
+                  key={idx}
+                  icon={
+                    <Image
+                      src={icon?.src}
+                      alt={icon?.alt || ""}
+                      width={40}
+                      height={40}
+                    />
+                  }
+                  title={item?.title || ""}
+                  q2={item?.question || ""}
+                  desc={item?.description || ""}
+                  note={item?.note || ""}
+                  noteText={item?.note_text || ""}
+                />
+              );
+            })}
+          </div>
         </div>
-        <div className="mayfair-content"> 
-          <h3 className="address">Mayfair, London W1</h3>
-          <p className="address">Mayfair, London W1</p>
-        </div>
+      </section>
 
-      </div>
+      <section className="business-address">
+        <div className="container">
+          <div className="left">
+            <p className="feature-location">Featured Location</p>
+            <h2>Pick Your Perfect Business Address</h2>
+            <p>Choose a professional location that supports the image you want for your business. Our Mayfair address is known for its reputation, stability, and high-quality surroundings.</p>
+            <div className="mayfair">
+              <div className="mygairimage">
+                <Image
+                  src="/images/location.png"
+                  alt="Map icon"
+                  width={24}
+                  height={24}
+                  className="checkIcon"
+                />
+
+
+              </div>
+              <div className="mayfair-content">
+                <h3 className="address">Mayfair, London W1</h3>
+                <p className="address">Mayfair, London W1</p>
+              </div>
+
+            </div>
             <a
-        href={
-          typeof window !== "undefined" &&
-          localStorage.getItem("wp_user_token")
-            ? "/dashboard"
-            : "/login"
-        }
-        className="view-plans-btn"
-      >
-        View Plans
-      </a>
-    </div>
-    <div className="right">
-   <Image
-  src="/images/bg1.png"
-  alt="Featured location"
-  width={600}
-  height={600}
-  className="checkIcon"
-/>
+              href={
+                typeof window !== "undefined" &&
+                  localStorage.getItem("wp_user_token")
+                  ? "/dashboard"
+                  : "/login"
+              }
+              className="view-plans-btn"
+            >
+              View Plans
+            </a>
+          </div>
+          <div className="right">
+            <Image
+              src="/images/bg1.png"
+              alt="Featured location"
+              width={600}
+              height={600}
+              className="checkIcon"
+            />
 
-    </div>
-  </div>
-</section>
-
-<section className="how-it-works">
-  <div className="container">
-    <p className="simple">Simple Process</p>
-    <h2>How It Works</h2>
-    <p>
-      A simple walk-through process at every step. We help the process clear so
-      you know what comes next.
-    </p>
-
-    <div className="steps">
-      {howSteps.map((step: any, index: number) => (
-        <div className="step" key={index}>
-          <span className="step-number">
-            {index === howSteps.length - 1 ? "✔" : index + 1}
-          </span>
-
-          <div className="step-inner">
-            <h3>{step?.title || ""}</h3>
-            <p>{step?.description || ""}</p>
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-{/* ================= COMPLIANCE ================= */}
-<section className="section-compliance">
-  <div className="container complianceGrid">
-    <div>
-      <h2 className="h2">Compliance and Security</h2>
-      <p className="accentText">
-        We keep things simple while protecting your business
-      </p>
-      <p className="muted">
-        Every virtual office in the UK must follow certain checks. We make this
-        as easy as possible while ensuring your business is protected.
-      </p>
+      </section>
 
-      <div className="miniCards">
-        <div className="miniCard">
-          <div className="miniIcon"><img src="/images/comp1.png" alt="" /></div>
+      <section className="how-it-works">
+        <div className="container">
+          <p className="simple">Simple Process</p>
+          <h2>How It Works</h2>
+          <p>
+            A simple walk-through process at every step. We help the process clear so
+            you know what comes next.
+          </p>
+
+          <div className="steps">
+            {howSteps.map((step: any, index: number) => (
+              <div className="step" key={index}>
+                <span className="step-number">
+                  {index === howSteps.length - 1 ? "✔" : index + 1}
+                </span>
+
+                <div className="step-inner">
+                  <h3>{step?.title || ""}</h3>
+                  <p>{step?.description || ""}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* ================= COMPLIANCE ================= */}
+      <section className="section-compliance">
+        <div className="container complianceGrid">
           <div>
-            <div className="miniTitle">Identity and Address Documents</div>
-            <div className="miniDesc">
-              Confirms who is using the address and keeps records accurate
+            <h2 className="h2">Compliance and Security</h2>
+            <p className="accentText">
+              We keep things simple while protecting your business
+            </p>
+            <p className="muted">
+              Every virtual office in the UK must follow certain checks. We make this
+              as easy as possible while ensuring your business is protected.
+            </p>
+
+            <div className="miniCards">
+              <div className="miniCard">
+                <div className="miniIcon"><img src="/images/comp1.png" alt="" /></div>
+                <div>
+                  <div className="miniTitle">Identity and Address Documents</div>
+                  <div className="miniDesc">
+                    Confirms who is using the address and keeps records accurate
+                  </div>
+                </div>
+              </div>
+
+              <div className="miniCard">
+                <div className="miniIcon"><img src="/images/comp2.png" alt="" /></div>
+                <div>
+                  <div className="miniTitle">Business Details</div>
+                  <div className="miniDesc">
+                    Helps prevent misuse of addresses and protects your reputation
+                  </div>
+                </div>
+              </div>
+
+              <div className="miniCard">
+                <div className="miniIcon"><img src="/images/comp3.png" alt="" /></div>
+                <div>
+                  <div className="miniTitle">Companies House Cross Checks</div>
+                  <div className="miniDesc">
+                    Makes sure your filing information is correct and compliant
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="codeCollage singleImage">
+            <Image
+              src="/images/compliance-security.png"
+              alt="Compliance and security"
+              width={520}
+              height={390}
+            />
+            <div className="secureBadge">
+              <div className="play">
+                <Image
+                  src="/images/symb23.png"
+                  alt="Secure"
+                  width={24}
+                  height={24}
+                  className="secureIcon"
+                />
+              </div>
+
+              <div>
+                <div className="secureTop">100% Secure</div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="miniCard">
-          <div className="miniIcon"><img src="/images/comp2.png" alt="" /></div>
-          <div>
-            <div className="miniTitle">Business Details</div>
-            <div className="miniDesc">
-              Helps prevent misuse of addresses and protects your reputation
-            </div>
-          </div>
-        </div>
-
-        <div className="miniCard">
-          <div className="miniIcon"><img src="/images/comp3.png" alt="" /></div>
-          <div>
-            <div className="miniTitle">Companies House Cross Checks</div>
-            <div className="miniDesc">
-              Makes sure your filing information is correct and compliant
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="codeCollage singleImage">
-      <Image
-        src="/images/compliance-security.png"
-        alt="Compliance and security"
-        width={520}
-        height={390}
-      />
-<div className="secureBadge">
-  <div className="play">
-<Image
-  src="/images/symb23.png"
-  alt="Secure"
-  width={24}
-  height={24}
-  className="secureIcon"
-/>
-  </div>
-
-  <div>
-    <div className="secureTop">100% Secure</div>
-  </div>
-</div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* ================= PLATFORM FEATURES ================= */}
       <section className="section-platform">
-  <div className="container platform">
-    <div className="platformTitle">
-      <h2 className="h2">Platform Features</h2>
-      <p className="muted">
-        Everything you need in one place. Your client dashboard gives you
-        access to tools that make managing your virtual office simple.
-      </p>
-    </div>
+        <div className="container platform">
+          <div className="platformTitle">
+            <h2 className="h2">Platform Features</h2>
+            <p className="muted">
+              Everything you need in one place. Your client dashboard gives you
+              access to tools that make managing your virtual office simple.
+            </p>
+          </div>
 
-    <div className="platformGrid">
-      {platformItems.map((item: any, idx: number) => {
-        const icon = platformIcons[idx];
+          <div className="platformGrid">
+            {platformItems.map((item: any, idx: number) => {
+              const icon = platformIcons[idx];
 
-        return (
-          <PlatformCard
-            key={idx}
-            icon={
-              <Image
-                src={icon?.src || `/images/${idx + 1}.png`}
-                alt={icon?.alt || ""}
-                width={30}
-                height={36}
-              />
-            }
-            title={item?.feature_title || ""}
-            subtitle={item?.feature_subtitle || ""}
-            ghost={idx === platformItems.length - 1}
-          />
-        );
-      })}
-    </div>
-  </div>
-</section>
+              return (
+                <PlatformCard
+                  key={idx}
+                  icon={
+                    <Image
+                      src={icon?.src || `/images/${idx + 1}.png`}
+                      alt={icon?.alt || ""}
+                      width={30}
+                      height={36}
+                    />
+                  }
+                  title={item?.feature_title || ""}
+                  subtitle={item?.feature_subtitle || ""}
+                  ghost={idx === platformItems.length - 1}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ================= TESTIMONIALS ================= */}
       <section className="section dark">
@@ -532,78 +532,78 @@ const platformIcons = await Promise.all(
       </section>
 
       <section className="section-see-difference">
-              <div className="container">
-                <div className="diffHead">
-                  <h2 className="h2 diffTitle">See the Difference</h2>
-                  <p className="muted diffSub">Why businesses switch to Virtual Office Anywhere.</p>
+        <div className="container">
+          <div className="diffHead">
+            <h2 className="h2 diffTitle">See the Difference</h2>
+            <p className="muted diffSub">Why businesses switch to Virtual Office Anywhere.</p>
+          </div>
+
+          <div className="diffWrap">
+            {/* LEFT LABELS */}
+            <div className="diffLeft">
+              {Array.isArray(page?.acf?.first_difference_content?.difference_content) ? (
+                page?.acf?.first_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
+                  <div key={index} className="diffLabel">
+                    {item.content_box}
+                  </div>
+                ))
+              ) : (
+                <div>No data available</div> // Display a fallback message if it's not an array
+              )}
+            </div>
+
+            {/* CENTER MAIN CARD */}
+            <div className="diffCenter">
+              <div className="diffMainCard">
+                <div className="diffBrand">
+                  <Image
+                    src="/images/logo2.png"
+                    alt="Virtual Office Anywhere"
+                    width={180}
+                    height={80}
+                    className="diffLogo"
+                    priority
+                  />
                 </div>
 
-                <div className="diffWrap">
-  {/* LEFT LABELS */}
-  <div className="diffLeft">
-    {Array.isArray(page?.acf?.first_difference_content?.difference_content) ? (
-      page?.acf?.first_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
-        <div key={index} className="diffLabel">
-          {item.content_box}
-        </div>
-      ))
-    ) : (
-      <div>No data available</div> // Display a fallback message if it's not an array
-    )}
-  </div>
+                <div className="diffMainList">
+                  {Array.isArray(page?.acf?.second_difference_content?.difference_content) ? (
+                    page?.acf?.second_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
+                      <div key={index} className="diffMainItem per-month">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: item.content_box }}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div>No data available</div>
+                  )}
+                </div>
 
-  {/* CENTER MAIN CARD */}
-  <div className="diffCenter">
-    <div className="diffMainCard">
-      <div className="diffBrand">
-        <Image
-          src="/images/logo2.png"
-          alt="Virtual Office Anywhere"
-          width={180}
-          height={80}
-          className="diffLogo"
-          priority
-        />
-      </div>
-
-      <div className="diffMainList">
-        {Array.isArray(page?.acf?.second_difference_content?.difference_content) ? (
-          page?.acf?.second_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
-            <div key={index} className="diffMainItem per-month">
-              <div
-                  dangerouslySetInnerHTML={{ __html: item.content_box }}
-                />
-            </div>
-          ))
-        ) : (
-          <div>No data available</div>
-        )}
-      </div>
-
-      <button className="btn btnPrimary full diffBtn">Choose Us</button>
-    </div>
-  </div>
-
-  {/* RIGHT PROVIDERS CARD */}
-  <div className="diffRight">
-    <div className="diffOtherCard">
-      <div className="diffOtherHead">Large Mass Providers</div>
-      <div className="diffOtherList">
-        {Array.isArray(page?.acf?.third_difference_content?.difference_content) ? (
-          page?.acf?.third_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
-            <div key={index} className="diffOtherItem">
-              {item.content_box}
-            </div>
-          ))
-        ) : (
-          <div>No data available</div>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
-
+                <button className="btn btnPrimary full diffBtn">Choose Us</button>
               </div>
+            </div>
+
+            {/* RIGHT PROVIDERS CARD */}
+            <div className="diffRight">
+              <div className="diffOtherCard">
+                <div className="diffOtherHead">Large Mass Providers</div>
+                <div className="diffOtherList">
+                  {Array.isArray(page?.acf?.third_difference_content?.difference_content) ? (
+                    page?.acf?.third_difference_content?.difference_content?.map((item: ContentBox, index: number) => (
+                      <div key={index} className="diffOtherItem">
+                        {item.content_box}
+                      </div>
+                    ))
+                  ) : (
+                    <div>No data available</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       <Footer />
