@@ -174,22 +174,35 @@ const platformIcons = await Promise.all(
               {hero_para}
             </p>
 
-            <div className="heroCtas">
-              {heroButtons.map((btn: any, index: number) => {
-                const label = btn?.button_text;
-                const link = btn?.button_link || "#";
-            
-                return (
-                  <a
-                    key={index}
-                    href={link}
-                    className={`btn ${index === 0 ? "btnPrimary" : "btnGhost"}`}
-                  >
-                    {label}
-                  </a>
-                );
-              })}
-            </div>
+          <div className="heroCtas">
+            {heroButtons.map((btn: any, index: number) => {
+              let link = "#";
+
+              // First button → Register
+              if (index === 0) {
+                link = "/register";
+              }
+
+              // Second button → Login or Dashboard
+              if (index === 1) {
+                const isLoggedIn =
+                  typeof window !== "undefined" &&
+                  localStorage.getItem("wp_user_token");
+
+                link = isLoggedIn ? "/dashboard" : "/login";
+              }
+
+              return (
+                <a
+                  key={index}
+                  href={link}
+                  className={`btn ${index === 0 ? "btnPrimary" : "btnGhost"}`}
+                >
+                  {btn?.button_text}
+                </a>
+              );
+            })}
+          </div>
             <div className="heroNote">
               <p>
                 {hero_note}
@@ -336,7 +349,17 @@ const platformIcons = await Promise.all(
         </div>
 
       </div>
-      <a href="#" className="view-plans-btn">View Plans</a>
+            <a
+        href={
+          typeof window !== "undefined" &&
+          localStorage.getItem("wp_user_token")
+            ? "/dashboard"
+            : "/login"
+        }
+        className="view-plans-btn"
+      >
+        View Plans
+      </a>
     </div>
     <div className="right">
    <Image

@@ -314,7 +314,7 @@ const h3 = s2?.section_heading;
                 {s6?.button_one_label && s6?.button_one_link?.url && (
                   <a
                     className="btn primary"
-                    href={s6.button_one_link.url}
+                    href="/contact-us"
                     target={s6.button_one_link.target || undefined}
                     rel={s6.button_one_link.target === "_blank" ? "noopener noreferrer" : undefined}
                   >
@@ -325,7 +325,7 @@ const h3 = s2?.section_heading;
                 {s6?.button_two_label && s6?.button_two_link?.url && (
                   <a
                     className="btn"
-                    href={s6.button_two_link.url}
+                    href="/about-us"
                     target={s6.button_two_link.target || undefined}
                     rel={s6.button_two_link.target === "_blank" ? "noopener noreferrer" : undefined}
                   >
