@@ -118,7 +118,7 @@ export default async function LocationPage() {
                 }}
               />
 
-              <a className="cta" href={s1?.cta_button_link?.url || "#"}>
+              <a className="cta" href="/login">
                 {s1?.cta_button_label}
               </a>
 
