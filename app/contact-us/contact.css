@@ -221,6 +221,9 @@ button:hover{
  
  
 @media(max-width:980px){
+     .hero-content {
+    width: auto;
+}
     .contact-wrapper {
     background: white;
     padding: 50px 20px;

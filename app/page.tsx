@@ -399,7 +399,77 @@ const platformIcons = await Promise.all(
     </div>
   </div>
 </section>
+{/* ================= COMPLIANCE ================= */}
+<section className="section-compliance">
+  <div className="container complianceGrid">
+    <div>
+      <h2 className="h2">Compliance and Security</h2>
+      <p className="accentText">
+        We keep things simple while protecting your business
+      </p>
+      <p className="muted">
+        Every virtual office in the UK must follow certain checks. We make this
+        as easy as possible while ensuring your business is protected.
+      </p>
 
+      <div className="miniCards">
+        <div className="miniCard">
+          <div className="miniIcon"><img src="/images/comp1.png" alt="" /></div>
+          <div>
+            <div className="miniTitle">Identity and Address Documents</div>
+            <div className="miniDesc">
+              Confirms who is using the address and keeps records accurate
+            </div>
+          </div>
+        </div>
+
+        <div className="miniCard">
+          <div className="miniIcon"><img src="/images/comp2.png" alt="" /></div>
+          <div>
+            <div className="miniTitle">Business Details</div>
+            <div className="miniDesc">
+              Helps prevent misuse of addresses and protects your reputation
+            </div>
+          </div>
+        </div>
+
+        <div className="miniCard">
+          <div className="miniIcon"><img src="/images/comp3.png" alt="" /></div>
+          <div>
+            <div className="miniTitle">Companies House Cross Checks</div>
+            <div className="miniDesc">
+              Makes sure your filing information is correct and compliant
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="codeCollage singleImage">
+      <Image
+        src="/images/compliance-security.png"
+        alt="Compliance and security"
+        width={520}
+        height={390}
+      />
+<div className="secureBadge">
+  <div className="play">
+<Image
+  src="/images/symb23.png"
+  alt="Secure"
+  width={24}
+  height={24}
+  className="secureIcon"
+/>
+  </div>
+
+  <div>
+    <div className="secureTop">100% Secure</div>
+  </div>
+</div>
+    </div>
+  </div>
+</section>
 
       {/* ================= PLATFORM FEATURES ================= */}
       <section className="section-platform">
