@@ -692,7 +692,7 @@ z-index: 999;
 .featureCard{
   background:#fff;
   border-radius:18px;
-  padding:28px;
+  padding:25px 20px;
   box-shadow:0px 1px 2px #0303030a;
 }
 
@@ -721,14 +721,14 @@ z-index: 999;
 }
 
 .featureNote{
-  padding-top:12px;
+  padding-top:20px;
 }
 
 .featureq2{
   padding-top:12px;
   text-transform:uppercase;
   font-size:12px;
-  font-weight:700;
+  font-weight:500;
   color:#9CA3AF;
 }
 
@@ -739,13 +739,13 @@ z-index: 999;
   font-size:12px;
   font-weight:700;
   font-family:montserrat;
-  padding-bottom:5px;
+  /* padding-bottom:5px; */
 }
 
 .noteText{
   color:#374151;
   margin-top:6px;
-  font-size:14px;
+  font-size:12px;
   font-weight:500;
 }
 
@@ -1220,12 +1220,15 @@ section.section-platform{
   opacity:.95;
 }
 
-.section.dark .testQuote{
-  color:#ffffffc7;
-  margin-top:10px;
-  font-size:16px;
-  line-height:24px;
-  font-style:italic;
+.section.dark .testQuote {
+    color: #ffffffc7;
+    margin-top: 10px;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 24px;
+    height: 130px;
+    min-height: 130px;
+    overflow: hidden;
 }
 
 .testPerson{
@@ -1310,19 +1313,17 @@ section.section-see-difference{
 .section-see-difference .diffWrap{
   display:flex;
   justify-content:center;
-  align-items:end;
-  gap:20px;
+  align-items:center;
   width:100%;
 }
 
 .section-see-difference .diffLeft{
 flex-direction: column;
     align-items: start;
-    gap: 59px;
-    width: 28%;
+    gap: 50px;
+    width: 20%;
     display: flex;
     justify-content: flex-end;
-    padding-bottom: 122px !important;
 }
 
 .section-see-difference .diffLabel{
@@ -1387,7 +1388,7 @@ flex-direction: column;
 }
 
 .section-see-difference .diffMainItem{
-  padding:20px 0px;
+  padding:15px 0px;
   font-size:16px !important;
   font-weight:400;
 }
@@ -1430,7 +1431,7 @@ flex-direction: column;
   color:#25324d73;
   font-size:14px;
   font-weight:400;
-  padding:23px 0px;
+  padding:20px 0px;
   text-align:center;
 }
 

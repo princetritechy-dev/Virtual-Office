@@ -448,7 +448,7 @@ const platformIcons = await Promise.all(
             <TestimonialCard
               quote="Setting up our UK business address was quick and stress free. The team was incredibly helpful and the Mayfair location gives our company real presence."
               name="Daniel"
-              role="Executive Owner"
+              role="E-commerce Owner"
               avatar="/images/Daniel.png"
             />
             <TestimonialCard
