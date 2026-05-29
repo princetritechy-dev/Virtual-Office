@@ -71,6 +71,27 @@ export default async function LocationPage() {
     ...f,
     iconUrl: featureIcons[idx],
   }));
+  const listItemsRaw = left?.section_list || [];
+
+const listIcons = await Promise.all(
+  listItemsRaw.map((item: any) => {
+    if (typeof item?.list_icon === "number") {
+      return getMediaUrl(item.list_icon);
+    }
+
+    return Promise.resolve(item?.list_icon?.url || item?.list_icon || null);
+  })
+);
+
+const listItems = listItemsRaw.map((item: any, idx: number) => ({
+  ...item,
+  iconUrl: listIcons[idx],
+}));
+
+const tagUrl =
+  typeof right?.tag_link === "string"
+    ? right.tag_link
+    : right?.tag_link?.url || "#";
   return (
     <main>
       <Header />
@@ -159,9 +180,21 @@ export default async function LocationPage() {
               </h2>
 
               <ul className="list">
-                {(left?.section_list || []).map((item: any, idx: number) => (
+                {listItems.map((item: any, idx: number) => (
                   <li key={idx} className="li">
-                    ✔ {item?.list_item}
+                    {item?.iconUrl && (
+                      <img
+                        src={item.iconUrl}
+                        alt={item?.list_item || "icon"}
+                        className="listIcon"
+                      />
+                    )}
+
+                      <span className="listitem"
+                      dangerouslySetInnerHTML={{
+                        __html: item?.list_item || "",
+                      }}
+                    />
                   </li>
                 ))}
               </ul>
@@ -209,7 +242,17 @@ export default async function LocationPage() {
                       <span>{right?.section_subtitle}</span>
                     </div>
                   </div>
-                  <div className="tag">{right?.tag_text}</div>
+<div className="tag">
+  <a
+  href={tagUrl}
+  className="tagBtn"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  {right?.tag_text}
+
+  </a>
+</div>
                 </div>
               </div>
             </div>

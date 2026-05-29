@@ -125,9 +125,15 @@ const servicesImageUrl = await getMediaUrl(services?.our_services_right_image);
             <h2 className="h2">
               {section2?.right_heading}
             </h2>
-            <p className="muted">
+            {/* <p className="muted">
               {section2?.right_content}
-            </p>
+            </p> */}
+            <div
+  className="muted"
+  dangerouslySetInnerHTML={{
+    __html: section2?.right_content || "",
+  }}
+/>
 
             
           </div>
@@ -240,7 +246,7 @@ const servicesImageUrl = await getMediaUrl(services?.our_services_right_image);
               </p>
               <a
                 className="text-link"
-                href={section3?.approachable_team_link?.url || "#"}
+                href="/contact-us"
                 target={section3?.approachable_team_link?.target || undefined}
                 rel={section3?.approachable_team_link?.target === "_blank" ? "noreferrer" : undefined}
               >
@@ -249,7 +255,7 @@ const servicesImageUrl = await getMediaUrl(services?.our_services_right_image);
             </div>
 
             <div className="card years-card">
-              <div className="years-num">{section3?.years_experience ?? ""}</div>
+              <div className="years-num">{section3?.years_experience ?? ""}+</div>
               <div className="years-sub">YEARS EXPERIENCE</div>
             </div>
           </div>

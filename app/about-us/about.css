@@ -182,12 +182,13 @@
 }
 
 .about-page .experience-card .exp-title {
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: 900;
-    display: flex;
     align-items: center;
+    margin-bottom: 6px;
     padding: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    line-height: 32px;
 }
 
 .about-page .container.real-row .exp-icon .dotIcon{
@@ -217,7 +218,7 @@
 /* ================= STANDARDS ================= */
 .about-page .section-light {
   background: #f6f9fd !important;
-  padding: 70px 0;
+  padding: 30px 0;
 }
 
 .about-page .standards-head {
@@ -269,8 +270,8 @@
 
 .about-page .card-title {
   margin: 0 0 10px;
-  font-weight: 900;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 20px;
 }
 
 .about-page .card-text {
@@ -291,7 +292,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.60);
+  color: #00A699;
 }
 
 .about-page .card-small {
@@ -345,6 +346,10 @@
 }
 .card.pricing-card {
     padding: 40px 30px !important;
+}
+.muted p{
+  margin: 0;
+  padding-bottom: 15px;
 }
 
 .about-page .tags {
