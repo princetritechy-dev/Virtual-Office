@@ -2,6 +2,7 @@ import Image from "next/image";
 import PlatformCard from "./PlatformCard";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import FaqSection from "./FaqSection";
 
 export const dynamic = "force-dynamic"; // ✅ IMPORTANT for Vercel
 
@@ -605,6 +606,8 @@ export default async function HomePage() {
 
         </div>
       </section>
+
+      <FaqSection />
 
       <Footer />
     </div>
