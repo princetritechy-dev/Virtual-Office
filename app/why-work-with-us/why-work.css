@@ -174,13 +174,15 @@
 }
 
 /* Revenue card */
-.rev-card{
-  background: linear-gradient(180deg, #1a2e4a, #11243d);
-  border-radius: 16px;
-  padding: 26px;
-  color:#fff;
-  box-shadow: 0 18px 40px rgba(10,35,55,.18);
-  border: 1px solid rgba(255,255,255,.10);
+.rev-card {
+    color: #fff;
+    background: url("/images/bgwhy.png");
+    border: 1px solid #ffffff1a;
+    border-radius: 16px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 26px;
+    box-shadow: 0 18px 40px #0a23372e;
 }
 
 .rev-top{
@@ -198,10 +200,10 @@
   margin-bottom: 14px;
 }
 
-.rev-numbers .big{
-  font-size: 54px;
-  line-height:1;
-  font-weight: 950;
+.rev-numbers .big {
+    font-size: 54px;
+    font-weight: 950;
+    line-height: 1;
 }
 
 .rev-numbers .slash{
@@ -498,19 +500,19 @@
   justify-content:center;
   height: 40px;
   padding: 0 18px;
-  border-radius: 999px;
-  font-weight: 900;
-  font-size: 13px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 15px;
   border: 1px solid rgba(255,255,255,.70);
   color:#fff;
   background: transparent;
   text-decoration:none;
 }
 
-.btn.primary{
-  background:#fff;
-  color:#0e2a33;
-  border-color:#fff;
+.btn.primary {
+    color: #00A699;
+    background: #fff;
+    border-color: #fff;
 }
 
 .cta small{

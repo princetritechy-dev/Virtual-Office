@@ -410,7 +410,7 @@
 }
 
 .about-page .years-card {
-  background: linear-gradient(90deg, #1d3150, #1F2937);
+  background: url("/images/bg-about.png") center;
   border: 1px solid rgba(255, 255, 255, 0.10);
   color: #fff;
   text-align: center;

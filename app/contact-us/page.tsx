@@ -1,7 +1,7 @@
 
 import Header from "../components/header";
 import Footer from "../components/footer";
-import "./contact.css"; // ✅ make sure file name is contact.css (not about.css)
+import "./contact.css"; 
 import ContactForm from "./ContactForm";
 
 
