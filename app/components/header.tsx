@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+
 
 type HeaderProps = {
   portalMode?: boolean;
@@ -44,6 +46,11 @@ export default function Header({
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const authDropdownRef = useRef<HTMLDivElement | null>(null);
+
+    const pathname = usePathname();
+
+   const isPlansActive =
+    pathname.startsWith("/virtual-office");
 
   useEffect(() => {
     setMounted(true);
@@ -217,6 +224,23 @@ export default function Header({
               </button>
 
               <nav className="navLinks" aria-label="Primary">
+
+                <div className={`plansDropdown ${isPlansActive ? "active" : ""}`}>
+        <button type="button" className="plansTrigger">
+          Plans
+          <span className="plansArrow">
+            <img src="/images/chevron.png" alt="" />
+          </span>
+        </button>
+
+        <div className="plansMenu">
+          <Link
+            href="/compliance"
+          >
+            Compliance
+          </Link>
+        </div>
+      </div>
                 <Link href="/about-us/" onClick={closeMenus}>
                   About Us
                 </Link>

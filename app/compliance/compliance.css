@@ -1,0 +1,564 @@
+.compliance-hero {
+  position: relative;
+  padding: 90px 0 160px;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+  background: var(--hero-bg) center/cover no-repeat;
+}
+
+.compliance-hero .hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.compliance-hero .pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(19, 182, 166, 0.15);
+  border: 1px solid rgba(19, 182, 166, 0.35);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #00A699;
+}
+
+.compliance-hero h1 {
+  margin: 18px 0 10px;
+  font-size: clamp(34px, 4.2vw, 54px);
+  line-height: 60px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  font-size: 60px;
+}
+
+.compliance-hero .hero-divider {
+  width: 52px;
+  height: 3px;
+  margin: 18px auto 22px;
+  background: #13b6a6;
+  border-radius: 999px;
+}
+
+.compliance-hero p {
+  margin: 0 auto 20px;
+  max-width: 640px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.compliance-hero .hero-down {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  margin: 10px auto 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+.compliance-hero .hero-curve {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -120px;
+  height: 240px;
+  border-top-left-radius: 140px;
+  border-top-right-radius: 140px;
+  filter: drop-shadow(0 -20px 40px rgba(10, 24, 42, 0.1));
+}
+
+/* =========================
+   COMPLIANCE FLOAT SECTION
+========================= */
+.compliance-float-wrap {
+  position: relative;
+  z-index: 3;
+  margin-top: -105px;
+}
+
+
+.compliance-float-wrap .float-card {
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e6eef5e6;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    padding: 28px 30px;
+    box-shadow: 0px 10px 30px 19px #2E3C5C3D;
+}
+
+.compliance-float-wrap .float-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1b2d43;
+  line-height: 32px;
+}
+
+.compliance-float-wrap .float-card p {
+  margin: 0 auto 16px;
+  max-width: 620px;
+  font-size: 13px;
+  color: #5a7086;
+  line-height: 1.7;
+}
+
+.compliance-float-wrap .promise {
+  text-align: left;
+  background: #f7fbff;
+  border: 1px solid #e6eef5;
+  border-radius: 12px;
+  padding: 14px 14px 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 4px solid #00a699;
+}
+
+.compliance-float-wrap .promise-icon {
+  padding-top: 3px;
+}
+
+.compliance-float-wrap .promise-small {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #2e3c5c;
+  font-size: 14px;
+  margin-bottom: 4px;
+  line-height: 20px;
+}
+
+.compliance-float-wrap .promise-text {
+  font-weight: 500;
+  font-size: 13px;
+  color: #2e3c5c;
+  line-height: 24px;
+}
+
+.sectionWhy {
+  padding: 100px 0;
+  background: #fff;
+}
+
+.sectionWhy .whyGrid {
+  display: flex;
+  align-items: start;
+  gap:50px;
+}
+
+/* IMAGES */
+
+.whyImages {
+  display: flex;
+  gap: 6px;
+  width:55%;
+}
+img.whyImg {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    object-fit: cover;
+    border-radius: 16px !important;
+}
+
+
+.leftImg {
+  width: 50%;
+  margin-top: 90px;
+    border-radius: 16px !important;
+}
+
+.rightImg {
+width: 50% !important;
+border-radius: 16px !important;
+}
+
+.rightImg img {
+    height: 413px !important;
+}
+
+/* CONTENT */
+
+.whyContent{
+    width:45%;
+}
+
+.whyContent h2{
+  font-size:36px;
+  line-height:40px;
+  font-weight:800;
+  color:#23395B;
+  margin-bottom:22px;
+}
+
+.whyContent h2 span{
+  color:#16b7a5;
+}
+
+.whyDesc{
+  color:#67768a;
+  line-height:1.8;
+  margin-bottom:28px;
+  max-width:520px;
+}
+
+/* Quote */
+
+.quoteBox {
+    color: #7a8898;
+    border-left: 4px solid #18b4a5;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    line-height: 22px;
+    font-size: 14px !important;
+}
+
+/* Title */
+
+.whyContent h4 {
+    color: #23395b;
+    margin-bottom: 22px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+}
+
+/* Checklist */
+ul.checkList {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.checkList li {
+    color: #4b5d73;
+    margin-bottom: 9px;
+    padding-left: 34px;
+    font-size: 16px;
+    position: relative;
+    width: 100% !important;
+    font-weight: 500;
+}
+
+.checkList li::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 20px;
+    height: 30px;
+    background-image: url("/images/compliance-icon.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+/* ===========================
+   FOURTH SECTION
+=========================== */
+
+.better-experience {
+  background: #2e3c5c;
+  padding: 120px 0;
+}
+
+.better-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.better-content h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 25px;
+  line-height: 40px;
+}
+
+
+.better-content .description {
+    color: #fff;
+
+    margin: 0 auto 40px;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 30px;
+}
+
+.experience-box {
+  max-width: 820px;
+  margin: 0 auto 40px;
+  background: rgba(255,255,255,.06);
+  border-left: 4px solid #00a699;
+  border-radius: 8px;
+  padding: 25px 30px;
+  text-align: left;
+}
+
+.experience-box p {
+  margin: 0;
+  color: #FFFFFF;
+  line-height: 24px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.better-content h4 {
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.cta-wrap{
+  padding: 70px 0 70px;
+}
+
+.cta {
+    background: linear-gradient(#13b6a6, #0ea89a);
+    border: 1px solid #ffffff40;
+    border-radius: 18px;
+    padding: 60px 30px;
+    box-shadow: 0px 25px 50px 17px #0000004F;
+    width: 753px;
+    margin: auto;
+    text-align: center;
+}
+
+.cta h3{
+  margin: 0 0 15px;
+  color:#fff;
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.cta p{
+  margin: 0 auto 20px auto;
+  color: rgba(255,255,255,.85);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 400;
+  width: 100%
+}
+
+.btns{
+  display:flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height: 40px;
+  padding: 18px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  border: 2px solid rgba(255,255,255,.70);
+  color:#fff;
+  background: transparent;
+  text-decoration:none;
+}
+
+.btn.primary {
+    color: #00A699;
+    background: #fff;
+    border-color: #fff;
+      font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  padding: 18px 40px;
+}
+
+.cta small{
+  display:block;
+  margin-top: 30px;
+  color: rgba(255,255,255,.78);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+@media (max-width: 980px) {
+  .better-experience {
+    padding: 80px 20px;
+  }
+
+  .better-content h2 {
+    font-size: 32px;
+  }
+
+  .better-content .description {
+    font-size: 15px;
+  }
+
+  .experience-box {
+    padding: 20px;
+  }
+
+  .better-content h4 {
+    font-size: 18px;
+  }
+}
+
+
+
+@media (max-width: 980px) {
+
+.cta {
+    width: 100%;
+}
+.cta p {
+    width: 100% !important;
+}
+
+
+
+  /* HERO */
+  .compliance-hero {
+    padding: 70px 0 150px;
+  }
+
+  /* WHY SECTION */
+  .sectionWhy {
+    padding: 70px 20px;
+  }
+
+  .sectionWhy .whyGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .whyImages {
+    width: 100% !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .leftImg,
+  .rightImg {
+    width: 50%;
+    margin-top: 0;
+  }
+
+  .leftImg {
+    margin-top: 40px !important;
+  }
+
+  .sectionWhy img.whyImg {
+    height: 231px !important;
+    object-fit: cover;
+  }
+
+  .whyContent {
+    width: 100% !important;
+    text-align: left;
+  }
+
+  .whyContent h2 {
+    font-size: 34px;
+  }
+
+  .whyContent h4 {
+    font-size: 24px;
+  }
+}
+
+
+@media (max-width: 520px) {
+
+  /* HERO */
+  .compliance-hero {
+    padding: 60px 0 140px;
+  }
+
+  .compliance-hero h1 {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .compliance-hero .pill {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  .compliance-hero p {
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 0 10px;
+  }
+
+  .compliance-hero .hero-divider {
+    margin: 14px auto 18px;
+  }
+
+  .compliance-hero .hero-down {
+    width: 30px;
+    height: 30px;
+  }
+
+  .compliance-hero .hero-curve {
+    bottom: -90px;
+    height: 180px;
+  }
+
+  /* FLOAT CARD */
+  .compliance-float-wrap {
+    margin-top: -70px;
+  }
+
+  .compliance-float-wrap .float-card {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .compliance-float-wrap .float-card h3 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .compliance-float-wrap .float-card p {
+    font-size: 12px;
+  }
+
+  .compliance-float-wrap .promise {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compliance-float-wrap .promise-icon {
+    padding-top: 0;
+  }
+
+  .compliance-float-wrap .promise-small {
+    font-size: 13px;
+  }
+
+  .compliance-float-wrap .promise-text {
+    font-size: 12px;
+    line-height: 20px;
+  }
+}

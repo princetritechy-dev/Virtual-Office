@@ -149,6 +149,94 @@ p.muted-two {
   transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
 }
 
+/* ================= NAV LINKS ================= */
+.navLinks a {
+  text-decoration: none;
+  color: #25324dc7;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+
+/* Active link inside dropdown */
+.plansMenu a.active {
+  color: #00A699;
+  font-weight: 600;
+}
+
+/* ================= PLANS DROPDOWN ================= */
+.plansDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Trigger button */
+.plansTrigger {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #25324dc7;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: 0.2s ease;
+}
+
+/* ACTIVE STATE (IMPORTANT FIX) */
+.plansDropdown.active .plansTrigger {
+  color: #00A699;
+}
+
+/* Arrow */
+.plansArrow img {
+  width: 14px;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate arrow when active */
+.plansDropdown.active .plansArrow img {
+  transform: rotate(180deg);
+}
+
+/* ================= DROPDOWN MENU ================= */
+.plansMenu {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background: #fff;
+  min-width: 200px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 8px 0;
+  display: none;
+  z-index: 99;
+}
+
+/* Show on hover OR active */
+.plansDropdown:hover .plansMenu,
+.plansDropdown.active .plansMenu {
+  display: block;
+}
+
+/* Menu links */
+.plansMenu a {
+  display: block;
+  padding: 10px 15px;
+  color: #25324dc7;
+  transition: 1s ease;
+}
+
+/* Hover effect */
+.plansMenu a:hover {
+  background: #f5f5f5;
+  color: #00A699;
+}
+
 .btn:active{
   transform:translateY(1px);
   font-family: var(--font-montserrat);
